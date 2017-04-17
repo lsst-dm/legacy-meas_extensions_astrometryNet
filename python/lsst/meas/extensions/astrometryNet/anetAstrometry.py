@@ -119,7 +119,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
     \section pipe_tasks_astrometry_Example  A complete example of using ANetAstrometryTask
 
-    See \ref meas_photocal_photocal_Example.
+    See \ref pipe_tasks_photocal_Example.
 
     To investigate the \ref pipe_tasks_astrometry_Debug, put something like
     \code{.py}
