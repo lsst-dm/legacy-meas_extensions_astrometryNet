@@ -3,6 +3,10 @@ We used to have AstrometryNetDataConfig() use the pex_config
 mechanism, but we need nested lists, so we do this home-brew version
 instead.
 '''
+from __future__ import absolute_import, division, print_function
+
+__all__ = ["AstrometryNetDataConfig"]
+
 from past.builtins import execfile
 from builtins import object
 

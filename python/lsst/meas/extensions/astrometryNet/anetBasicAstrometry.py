@@ -1,10 +1,3 @@
-from __future__ import absolute_import, division
-from __future__ import print_function
-from builtins import zip
-from builtins import next
-from builtins import input
-from builtins import range
-from builtins import object
 #
 # LSST Data Management System
 #
@@ -27,6 +20,15 @@ from builtins import object
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import, division, print_function
+
+__all__ = ["InitialAstrometry", "ANetBasicAstrometryConfig", "ANetBasicAstrometryTask"]
+
+from builtins import zip
+from builtins import next
+from builtins import input
+from builtins import range
+from builtins import object
 import math
 import sys
 
@@ -44,8 +46,6 @@ import lsst.meas.algorithms.utils as maUtils
 from .loadAstrometryNetObjects import LoadAstrometryNetObjectsTask, LoadMultiIndexes
 from lsst.meas.astrom import displayAstrometry, makeMatchStatisticsInRadians
 import lsst.meas.astrom.sip as astromSip
-
-__all__ = ["InitialAstrometry", "ANetBasicAstrometryConfig", "ANetBasicAstrometryTask"]
 
 
 class InitialAstrometry(object):

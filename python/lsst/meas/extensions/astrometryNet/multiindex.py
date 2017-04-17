@@ -1,17 +1,19 @@
+from __future__ import absolute_import, division, print_function
+
+__all__ = ["getIndexPath", "getConfigFromEnvironment", "AstrometryNetCatalog", "generateCache"]
+
 from builtins import zip
 from builtins import range
 from builtins import object
 import os
 
-import numpy
+import numpy as np
 import pyfits
 
 import lsst.utils
 from lsst.log import Log
 from .astrometry_net import MultiIndex, healpixDistance
 from .astrometryNetDataConfig import AstrometryNetDataConfig
-
-__all__ = ["getIndexPath", "getConfigFromEnvironment", "AstrometryNetCatalog", "generateCache"]
 
 
 def getIndexPath(fn):
@@ -209,9 +211,9 @@ class AstrometryNetCatalog(object):
                                   pyfits.Column(name="healpix", format="K"),
                                   pyfits.Column(name="nside", format="K"),
                                   ], nrows=len(self._multiInds))
-        first.data.field("id")[:] = numpy.arange(len(self._multiInds), dtype=int)
-        first.data.field("healpix")[:] = numpy.array([ind._healpix for ind in self._multiInds])
-        first.data.field("nside")[:] = numpy.array([ind._nside for ind in self._multiInds])
+        first.data.field("id")[:] = np.arange(len(self._multiInds), dtype=int)
+        first.data.field("healpix")[:] = np.array([ind._healpix for ind in self._multiInds])
+        first.data.field("nside")[:] = np.array([ind._nside for ind in self._multiInds])
 
         # Second table
         second = pyfits.new_table([pyfits.Column(name="id", format="K"),
