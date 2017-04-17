@@ -16,7 +16,7 @@ extern "C" {
 #include <cstdint>
 #include "boost/format.hpp"
 
-#include "lsst/meas/astrom/detail/utils.h"
+#include "lsst/meas/extensions/astrometryNet/detail/utils.h"
 #include "lsst/base.h"
 #include "lsst/pex/exceptions.h"
 #include "lsst/afw/table/Source.h"
@@ -32,7 +32,8 @@ namespace afwGeom  = lsst::afw::geom;
 
 namespace lsst {
 namespace meas {
-namespace astrom {
+namespace extensions {
+namespace astrometryNet {
 namespace detail {
 
 static float *
@@ -341,5 +342,4 @@ getCatalogImpl(std::vector<index_t*> inds,
     return cat;
 }
 
-}}}}
-
+}}}}}

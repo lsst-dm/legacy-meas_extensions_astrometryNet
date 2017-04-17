@@ -32,7 +32,8 @@ from lsst.daf.base import PropertySet
 import lsst.afw.geom as afwGeom
 from lsst.afw.image import makeWcs
 from lsst.afw.table import CoordKey, Point2DKey
-from lsst.meas.astrom import LoadAstrometryNetObjectsTask, AstrometryNetDataConfig
+from lsst.meas.extensions.astrometryNet import LoadAstrometryNetObjectsTask, \
+    AstrometryNetDataConfig
 from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
 
 DoPlot = False

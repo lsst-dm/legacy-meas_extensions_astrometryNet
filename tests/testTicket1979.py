@@ -28,7 +28,8 @@ import unittest
 
 from lsst.afw.coord import IcrsCoord
 from lsst.log import Log
-import lsst.meas.astrom as measAstrom
+from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryConfig, \
+    AstrometryNetDataConfig, ANetBasicAstrometryTask
 import lsst.utils.tests
 import lsst.afw.geom as afwGeom
 from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
@@ -38,10 +39,10 @@ class MultipleCatalogStarsTest(unittest.TestCase):
 
     def setUp(self):
         datapath = setupAstrometryNetDataDir('photocal')
-        self.conf = measAstrom.ANetBasicAstrometryConfig()
+        self.conf = ANetBasicAstrometryConfig()
         # Load andConfig2.py rather than the default.
         confpath = os.path.join(datapath, 'andConfig2.py')
-        self.andConfig = measAstrom.AstrometryNetDataConfig()
+        self.andConfig = AstrometryNetDataConfig()
         self.andConfig.load(confpath)
 
     def tearDown(self):
@@ -49,7 +50,7 @@ class MultipleCatalogStarsTest(unittest.TestCase):
         del self.andConfig
 
     def testGetCatalog(self, logLevel=Log.TRACE):
-        astrom = measAstrom.ANetBasicAstrometryTask(self.conf, andConfig=self.andConfig)
+        astrom = ANetBasicAstrometryTask(self.conf, andConfig=self.andConfig)
         astrom.log.setLevel(logLevel)
 
         ctrCoord = IcrsCoord(

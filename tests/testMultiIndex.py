@@ -26,22 +26,22 @@ from __future__ import print_function
 import os
 import unittest
 
-import lsst.meas.astrom as measAstrom
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
 import lsst.afw.image as afwImg
 import lsst.utils.tests
 from astrometry.util import ttime
 from lsst.log import Log
-from lsst.meas.astrom import AstrometryNetDataConfig
-from lsst.meas.astrom.multiindex import generateCache
+from lsst.meas.extensions.astrometryNet import AstrometryNetDataConfig, \
+    ANetBasicAstrometryConfig, ANetBasicAstrometryTask
+from lsst.meas.extensions.astrometryNet.multiindex import generateCache
 from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
 
 
 class MultiIndexTest(unittest.TestCase):
 
     def setUp(self):
-        self.conf = measAstrom.ANetBasicAstrometryConfig()
+        self.conf = ANetBasicAstrometryConfig()
 
         # Load sample input from disk
         testDir = os.path.dirname(__file__)
@@ -61,7 +61,7 @@ class MultiIndexTest(unittest.TestCase):
         del self.exposure
 
     def getAstrometrySolution(self, andConfig=None, logLevel=Log.INFO):
-        astrom = measAstrom.ANetBasicAstrometryTask(self.conf, andConfig=andConfig)
+        astrom = ANetBasicAstrometryTask(self.conf, andConfig=andConfig)
         astrom.log.setLevel(logLevel)
         res = astrom.determineWcs(self.srcCat, self.exposure, bbox=self.bbox)
         del astrom
@@ -140,7 +140,7 @@ class MultiIndexTest(unittest.TestCase):
         andConfig.multiIndexFiles = andConfig.multiIndexFiles * 100
         print(len(andConfig.multiIndexFiles), 'multi-index files')
 
-        astrom = measAstrom.ANetBasicAstrometryTask(self.conf, andConfig=andConfig)
+        astrom = ANetBasicAstrometryTask(self.conf, andConfig=andConfig)
 
         fd1 = ttime.count_file_descriptors()
         print()
