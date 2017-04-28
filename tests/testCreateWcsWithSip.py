@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # LSST Data Management System
 # Copyright 2008, 2009, 2010 LSST Corporation.
@@ -22,7 +20,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 import os
 import unittest
 
@@ -30,7 +28,7 @@ from lsst.afw.table import SimpleCatalog, SourceCatalog
 import lsst.utils.tests
 import lsst.afw.geom as afwGeom
 from lsst.log import Log
-from lsst.meas.astrom import ANetBasicAstrometryTask
+from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryTask
 import lsst.meas.astrom.sip as sip
 import lsst.meas.astrom.sip.genDistortedImage as distort
 import lsst.meas.astrom.sip.cleanBadPoints as cleanBadPoints

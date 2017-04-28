@@ -5,11 +5,12 @@
 #include <vector>
 
 #include "lsst/pex/exceptions.h"
-#include "lsst/meas/astrom/astrometry_net.h"
+#include "lsst/meas/extensions/astrometryNet/astrometry_net.h"
 
 namespace lsst {
 namespace meas {
-namespace astrom {
+namespace extensions {
+namespace astrometryNet {
 
 namespace {
 
@@ -26,7 +27,7 @@ static time_t timer_callback(void* baton) {
     return 1;
 }
 
-}  // namespace lsst::meas::astrom::<anonymous>
+}  // namespace <anonymous>
 
 MultiIndex::MultiIndex(std::string const & filepath) : _multiindex(multiindex_new(filepath.c_str())) {
     if (!_multiindex) {
@@ -84,15 +85,15 @@ lsst::afw::table::SimpleCatalog Solver::getCatalog(
         throw LSST_EXCEPT(lsst::pex::exceptions::InvalidParameterError,
             "Filter name, mag column, and mag error column vectors must be the same length.");
     }
-    std::vector<lsst::meas::astrom::detail::MagColInfo> magColInfoList;
+    std::vector<detail::MagColInfo> magColInfoList;
     for (size_t i=0; i<filterNameList.size(); ++i) {
-        lsst::meas::astrom::detail::MagColInfo mc;
+        astrometryNet::detail::MagColInfo mc;
         mc.filterName = filterNameList[i];
         mc.magCol = magColList[i];
         mc.magErrCol = magErrColList[i];
         magColInfoList.push_back(mc);
     }
-    return lsst::meas::astrom::detail::getCatalogImpl(inds, ctrCoord, radius,
+    return detail::getCatalogImpl(inds, ctrCoord, radius,
         idCol, magColInfoList, starGalCol, varCol, uniqueIds);
 }
 
@@ -177,7 +178,7 @@ void Solver::run(double cpulimit) {
 void Solver::addIndices(std::vector<index_t*> inds) {
     for (std::vector<index_t*>::iterator pind = inds.begin();
          pind != inds.end(); ++pind) {
-        lsst::meas::astrom::detail::IndexManager man(*pind);
+        detail::IndexManager man(*pind);
 //            printf("Checking index \"%s\"\n", man.index->indexname);
         if (_solver->use_radec) {
             double ra,dec,radius;
@@ -243,4 +244,4 @@ lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::coord::Coor
                                   lsst::afw::geom::degrees);
 }
 
-}}}  // namespace lsst::meas::astrom
+}}}}  // namespace lsst::meas::extensions::astrometryNet

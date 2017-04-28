@@ -1,3 +1,3 @@
 #!/usr/bin/env python
-from lsst.meas.astrom.multiindex import generateCache
+from lsst.meas.extensions.astromNet.multiindex import generateCache
 generateCache()
