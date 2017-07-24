@@ -44,6 +44,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         # Set up local astrometry_net_data
         self.datapath = setupAstrometryNetDataDir('photocal')
         self.config = LoadAstrometryNetObjectsTask.ConfigClass()
+        self.config.pixelMargin = 50  # Original default when these tests were written
 
         self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(3001, 3001))
         self.ctrPix = afwGeom.Point2I(1500, 1500)
