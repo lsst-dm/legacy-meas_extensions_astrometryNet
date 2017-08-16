@@ -30,7 +30,7 @@ from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryConfig, \
     AstrometryNetDataConfig, ANetBasicAstrometryTask
 import lsst.utils.tests
 import lsst.afw.geom as afwGeom
-from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
+from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 
 class MultipleCatalogStarsTest(unittest.TestCase):
