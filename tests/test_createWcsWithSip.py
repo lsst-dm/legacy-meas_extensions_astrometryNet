@@ -32,7 +32,7 @@ from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryTask
 import lsst.meas.astrom.sip as sip
 import lsst.meas.astrom.sip.genDistortedImage as distort
 import lsst.meas.astrom.sip.cleanBadPoints as cleanBadPoints
-from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
+from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 
 class CreateWcsWithSipCase(unittest.TestCase):

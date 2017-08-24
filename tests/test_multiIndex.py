@@ -33,7 +33,7 @@ from lsst.log import Log
 from lsst.meas.extensions.astrometryNet import AstrometryNetDataConfig, \
     ANetBasicAstrometryConfig, ANetBasicAstrometryTask
 from lsst.meas.extensions.astrometryNet.multiindex import generateCache
-from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
+from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 
 class MultiIndexTest(unittest.TestCase):

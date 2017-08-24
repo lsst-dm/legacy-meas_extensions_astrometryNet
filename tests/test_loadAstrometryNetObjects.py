@@ -33,7 +33,7 @@ from lsst.afw.image import makeWcs
 from lsst.afw.table import CoordKey, Point2DKey
 from lsst.meas.extensions.astrometryNet import LoadAstrometryNetObjectsTask, \
     AstrometryNetDataConfig
-from testFindAstrometryNetDataDir import setupAstrometryNetDataDir
+from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 DoPlot = False
 
