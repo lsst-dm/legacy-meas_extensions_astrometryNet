@@ -35,8 +35,6 @@ extern "C" {
 #include "lsst/daf/base/Persistable.h"
 #include "lsst/daf/base/PropertyList.h"
 #include "lsst/afw/table.h"
-#include "lsst/afw/image/Wcs.h"
-#include "lsst/afw/image/TanWcs.h"
 #include "lsst/afw/geom.h"
 #include "lsst/afw/coord.h"
 
@@ -167,7 +165,7 @@ public:
 
     std::shared_ptr<lsst::daf::base::PropertyList> getSolveStats() const;
 
-    std::shared_ptr<lsst::afw::image::Wcs> getWcs();
+    std::shared_ptr<lsst::afw::geom::SkyWcs> getWcs();
 
     bool didSolve() const {
         return solver_did_solve(_solver.get());

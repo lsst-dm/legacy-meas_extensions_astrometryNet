@@ -26,7 +26,6 @@ __all__ = ["ANetAstrometryConfig", "ANetAstrometryTask", "showAstrometry"]
 from builtins import input
 from builtins import zip
 from builtins import range
-from contextlib import contextmanager
 
 import numpy as np
 
@@ -287,42 +286,6 @@ class ANetAstrometryTask(pipeBase.Task):
 
         return afwGeom.Box2I(bboxD)
 
-    @contextmanager
-    def distortionContext(self, sourceCat, exposure):
-        """!Context manager that applies and removes distortion
-
-        We move the "centroid" definition in the catalog table to
-        point to the distorted positions.  This is undone on exit
-        from the context.
-
-        The input Wcs is taken to refer to the coordinate system
-        with the distortion correction applied, and hence no shift
-        is required when the sources are distorted.  However, after
-        Wcs fitting, the Wcs is in the distorted frame so when the
-        distortion correction is removed, the Wcs needs to be
-        shifted to compensate.
-
-        \param sourceCat Sources on exposure, an lsst.afw.table.SourceCatalog
-        \param exposure Exposure holding Wcs, an lsst.afw.image.ExposureF or D
-        \return bounding box of distorted exposure
-        """
-        # Apply distortion, if not already present in the exposure's WCS
-        if exposure.getWcs().hasDistortion():
-            yield exposure.getBBox()
-        else:
-            bbox = self.distort(sourceCat=sourceCat, exposure=exposure)
-            oldCentroidName = sourceCat.table.getCentroidDefinition()
-            sourceCat.table.defineCentroid(self.distortedName)
-            try:
-                yield bbox  # Execute 'with' block, providing bbox to 'as' variable
-            finally:
-                # Un-apply distortion
-                sourceCat.table.defineCentroid(oldCentroidName)
-                x0, y0 = exposure.getXY0()
-                wcs = exposure.getWcs()
-                if wcs:
-                    wcs.shiftReferencePixel(-bbox.getMinX() + x0, -bbox.getMinY() + y0)
-
     @pipeBase.timeMethod
     def loadAndMatch(self, exposure, sourceCat, bbox=None):
         """!Load reference objects overlapping an exposure and match to sources detected on that exposure
@@ -339,36 +302,36 @@ class ANetAstrometryTask(pipeBase.Task):
 
         @note ignores config.forceKnownWcs
         """
-        with self.distortionContext(sourceCat=sourceCat, exposure=exposure) as bbox:
-            if not self.solver:
-                self.makeSubtask("solver")
+        bbox = exposure.getBBox()
+        if not self.solver:
+            self.makeSubtask("solver")
 
-            astrom = self.solver.useKnownWcs(
-                sourceCat=sourceCat,
-                exposure=exposure,
-                bbox=bbox,
-                calculateSip=False,
-            )
+        astrom = self.solver.useKnownWcs(
+            sourceCat=sourceCat,
+            exposure=exposure,
+            bbox=bbox,
+            calculateSip=False,
+        )
 
-            if astrom is None or astrom.getWcs() is None:
-                raise RuntimeError("Unable to solve astrometry")
+        if astrom is None or astrom.getWcs() is None:
+            raise RuntimeError("Unable to solve astrometry")
 
-            matches = astrom.getMatches()
-            matchMeta = astrom.getMatchMetadata()
-            if matches is None or len(matches) == 0:
-                raise RuntimeError("No astrometric matches")
-            self.log.info("%d astrometric matches" % (len(matches)))
+        matches = astrom.getMatches()
+        matchMeta = astrom.getMatchMetadata()
+        if matches is None or len(matches) == 0:
+            raise RuntimeError("No astrometric matches")
+        self.log.info("%d astrometric matches" % (len(matches)))
 
-            if self._display:
-                frame = lsstDebug.Info(__name__).frame
-                displayAstrometry(exposure=exposure, sourceCat=sourceCat, matches=matches,
-                                  frame=frame, pause=False)
+        if self._display:
+            frame = lsstDebug.Info(__name__).frame
+            displayAstrometry(exposure=exposure, sourceCat=sourceCat, matches=matches,
+                              frame=frame, pause=False)
 
-            return pipeBase.Struct(
-                refCat=astrom.refCat,
-                matches=matches,
-                matchMeta=matchMeta,
-            )
+        return pipeBase.Struct(
+            refCat=astrom.refCat,
+            matches=matches,
+            matchMeta=matchMeta,
+        )
 
     @pipeBase.timeMethod
     def _astrometry(self, sourceCat, exposure, bbox=None):

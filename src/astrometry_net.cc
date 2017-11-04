@@ -138,19 +138,22 @@ std::shared_ptr<lsst::daf::base::PropertyList> Solver::getSolveStats() const {
     return qa;
 }
 
-std::shared_ptr<lsst::afw::image::Wcs> Solver::getWcs() {
+std::shared_ptr<lsst::afw::geom::SkyWcs> Solver::getWcs() {
     MatchObj* match = solver_get_best_match(_solver.get());
     if (!match)
-        return std::shared_ptr<afw::image::Wcs>();
+        return std::shared_ptr<afw::geom::SkyWcs>();
     tan_t* wcs = &(match->wcstan);
 
     afw::geom::Point2D crpix(wcs->crpix[0], wcs->crpix[1]);
-    std::shared_ptr<afw::coord::Coord const> crval
-        (new afw::coord::Coord(wcs->crval[0] * afw::geom::degrees,
-                             wcs->crval[1] * afw::geom::degrees));
-    return afw::image::makeWcs(*crval, crpix,
-                             wcs->cd[0][0], wcs->cd[0][1],
-                             wcs->cd[1][0], wcs->cd[1][1]);
+    auto const crval = afw::coord::IcrsCoord(wcs->crval[0] * afw::geom::degrees,
+                                             wcs->crval[1] * afw::geom::degrees);
+    Eigen::Matrix2d cdMatrix;
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 2; ++j) {
+            cdMatrix(i, j) = wcs->cd[i][j];
+        }
+    }
+    return afw::geom::makeSkyWcs(crpix, crval, cdMatrix);
 }
 
 void Solver::run(double cpulimit) {

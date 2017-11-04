@@ -29,7 +29,6 @@ import unittest
 import lsst.utils.tests
 from lsst.daf.base import PropertySet
 import lsst.afw.geom as afwGeom
-from lsst.afw.image import makeWcs
 from lsst.afw.table import CoordKey, Point2DKey
 from lsst.meas.extensions.astrometryNet import LoadAstrometryNetObjectsTask, \
     AstrometryNetDataConfig
@@ -63,7 +62,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         metadata.set("CD1_2", 0.0)
         metadata.set("CD2_2", -5.1e-05)
         metadata.set("CD2_1", 0.0)
-        self.wcs = makeWcs(metadata)
+        self.wcs = afwGeom.makeSkyWcs(metadata)
         self.desNumStarsInPixelBox = 270
         self.desNumStarsInSkyCircle = 410
 

@@ -10,6 +10,7 @@ import os
 import lsst.meas.astrom as measAstrom
 import lsst.afw.table as afwTable
 import lsst.afw.image as afwImage
+from lsst.afw.geom import makeSkyWcs
 from lsst.log import Log
 
 import pyfits
@@ -168,7 +169,6 @@ def showSipSolutions(srcs, wcs0, andDir, x0, y0, W, H, filterName,
 
     solve = ast.determineWcs2(srcs, **imargs)
     wcs1 = solve.sipWcs
-    # print 'wcs1:', wcs1.getFitsMetadata().toString()
 
     matches = solve.sipMatches
     msx, msy = [], []
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     # Read original WCS
     fn = os.path.join(mydir, 't2710.wcs')
     hdr = afwImage.readMetadata(fn)
-    wcs0 = afwImage.makeWcs(hdr)
+    wcs0 = makeSkyWcs(hdr)
 
     anddir = os.path.join(mydir, 'astrometry_net_data', 'ticket2710')
 
