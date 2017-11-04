@@ -157,10 +157,8 @@ def showSipSolutions(srcs, wcs0, andDir, x0, y0, W, H, filterName,
         msy.append(src.getY())
 
     plt.clf()
-    #plt.plot(x, y, 'o', mec='r', mfc='none', ms=4)
     plt.plot(x, y, 'r.')
     plt.plot(msx, msy, 'o', mec='r')
-    #plt.plot(rx0, ry0, 'o', mec='g', mfc='none', ms=4)
     plt.plot(rx0, ry0, 'g.')
     plt.plot(mrx, mry, 'gx')
     plt.title('TAN matches')
@@ -248,6 +246,7 @@ def readSourcesFromXyTable(xyfn):
         src.set(key.getY(), yi)
         src.set(fkey, fi)
     return srcs
+
 
 if __name__ == '__main__':
     mydir = os.path.dirname(__file__)
