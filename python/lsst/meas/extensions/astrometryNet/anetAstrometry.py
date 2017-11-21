@@ -33,7 +33,7 @@ import numpy as np
 import lsstDebug
 import lsst.pex.exceptions
 import lsst.afw.geom as afwGeom
-from lsst.afw.cameraGeom import TAN_PIXELS
+from lsst.afw.cameraGeom import PIXELS, TAN_PIXELS
 from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey
 import lsst.pex.config as pexConfig
 import lsst.pipe.base as pipeBase
@@ -256,8 +256,7 @@ class ANetAstrometryTask(pipeBase.Task):
         if detector is None:
             self.log.warn("No detector associated with exposure; assuming null distortion")
         else:
-            tanSys = detector.makeCameraSys(TAN_PIXELS)
-            pixToTanXYTransform = detector.getTransformMap().get(tanSys)
+            pixToTanXYTransform = detector.getTransform(PIXELS, TAN_PIXELS)
 
         if pixToTanXYTransform is None:
             self.log.info("Null distortion correction")
