@@ -9,7 +9,7 @@ import os
 
 import lsst.meas.astrom as measAstrom
 import lsst.afw.table as afwTable
-import lsst.afw.image as afwImage
+from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
 from lsst.log import Log
 
@@ -260,7 +260,7 @@ if __name__ == '__main__':
 
     # Read original WCS
     fn = os.path.join(mydir, 't2710.wcs')
-    hdr = afwImage.readMetadata(fn)
+    hdr = readMetadata(fn)
     wcs0 = makeSkyWcs(hdr)
 
     anddir = os.path.join(mydir, 'astrometry_net_data', 'ticket2710')
