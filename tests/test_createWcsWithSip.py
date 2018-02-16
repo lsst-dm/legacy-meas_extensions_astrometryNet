@@ -74,7 +74,6 @@ class CreateWcsWithSipCase(unittest.TestCase):
         res = self.astrom.determineWcs2(cat, bbox=bbox)
         self.assertIsNotNone(res.sipWcs, "Failed to fit SIP terms")
         print('Got result', res)
-        print('SIP:', res.sipWcs.getFitsMetadata().toString())
 
         wcs = res.wcs
         for src in cat:
@@ -106,14 +105,6 @@ class CreateWcsWithSipCase(unittest.TestCase):
         res = self.astrom.determineWcs2(img, bbox=bbox)
         imgWcs = res.getWcs()
 
-        def printWcs(wcs):
-            print("WCS metadata:")
-            md = wcs.getFitsMetadata()
-            for name in md.names():
-                print("%s: %r" % (name, md.get(name)))
-
-        printWcs(imgWcs)
-
         # Create a wcs with sip
         cat = cat.cast(SimpleCatalog, False)
         matchList = self.matchSrcAndCatalogue(cat, img, imgWcs)
@@ -121,15 +112,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
         return
         sipObject = sip.makeCreateWcsWithSip(matchList, imgWcs, 3)
 
-        # print 'Put in TAN Wcs:'
-        # print imgWcs.getFitsMetadata().toString()
         imgWcs = sipObject.getNewWcs()
-        # print 'Got SIP Wcs:'
-        # print imgWcs.getFitsMetadata().toString()
-
-        # Write out the SIP header
-        # afwImage.fits_write_imageF('createWcsWithSip.sip', afwImage.ImageF(0,0),
-        # imgWcs.getFitsMetadata())
 
         print('number of matches:', len(matchList), sipObject.getNPoints())
         scatter = sipObject.getScatterOnSky().asArcseconds()

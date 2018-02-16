@@ -529,7 +529,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         if wcs is not None:
             if pixelScale is None:
                 if usePixelScale:
-                    pixelScale = wcs.pixelScale()
+                    pixelScale = wcs.getPixelScale()
                     self.log.debug('Setting pixel scale estimate = %.3f from given WCS estimate',
                                    pixelScale.asArcseconds())
 
@@ -550,7 +550,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                                    'image size, and searchRadiusScale = %g',
                                    searchRadius, searchRadiusScale)
             if useParity:
-                parity = wcs.isFlipped()
+                parity = wcs.isFlipped
                 self.log.debug('Using parity = %s' % (parity and 'True' or 'False'))
 
         if doTrim:
@@ -612,7 +612,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                 src.set(key.getX(), x0 + xx)
                 src.set(key.getY(), y0 + yy)
                 csrc.append(src)
-                rd = wcs.pixelToSky(afwGeom.Point2D(xx + x0, yy + y0))
+                rd = wcs.pixelToSky(xx + x0, yy + y0)
                 ref = refs.makeRecord()
                 ref.setCoord(rd)
                 cref.append(ref)
@@ -680,6 +680,11 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             except pexExceptions.Exception as e:
                 self.log.warn('Failed to calculate distortion terms. Error: ', str(e))
                 break
+
+            # update the source catalog
+            for source in sourceCat:
+                skyPos = proposedWcs.pixelToSky(source.getCentroid())
+                source.setCoord(skyPos)
 
             # use new WCS to get new matchlist.
             proposedMatchlist = self._getMatchList(sourceCat, refCat, proposedWcs)
@@ -950,12 +955,9 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         if solver.didSolve():
             self.log.debug('Solved!')
             wcs = solver.getWcs()
-            self.log.debug('WCS: %s', wcs.getFitsMetadata().toString())
 
             if x0 != 0 or y0 != 0:
-                wcs.shiftReferencePixel(x0, y0)
-                self.log.debug('After shifting reference pixel by x0,y0 = (%i,%i), WCS is: %s',
-                               x0, y0, wcs.getFitsMetadata().toString())
+                wcs = wcs.copyAtShiftedPixelOrigin(afwGeom.Extent2D(x0, y0))
 
         else:
             self.log.warn('Did not get an astrometric solution from Astrometry.net')
@@ -1009,11 +1011,11 @@ def _createMetadata(bbox, wcs, filterName):
 
     bboxD = afwGeom.Box2D(bbox)
     cx, cy = bboxD.getCenter()
-    radec = wcs.pixelToSky(cx, cy).toIcrs()
+    radec = wcs.pixelToSky(cx, cy)
     meta.add('RA', radec.getRa().asDegrees(), 'field center in degrees')
     meta.add('DEC', radec.getDec().asDegrees(), 'field center in degrees')
     pixelRadius = math.hypot(*bboxD.getDimensions())/2.0
-    skyRadius = wcs.pixelScale() * pixelRadius
+    skyRadius = wcs.getPixelScale() * pixelRadius
     meta.add('RADIUS', skyRadius.asDegrees(),
              'field radius in degrees, approximate')
     meta.add('SMATCHV', 1, 'SourceMatchVector version number')

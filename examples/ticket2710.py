@@ -9,7 +9,8 @@ import os
 
 import lsst.meas.astrom as measAstrom
 import lsst.afw.table as afwTable
-import lsst.afw.image as afwImage
+from lsst.afw.fits import readMetadata
+from lsst.afw.geom import makeSkyWcs
 from lsst.log import Log
 
 import pyfits
@@ -157,10 +158,8 @@ def showSipSolutions(srcs, wcs0, andDir, x0, y0, W, H, filterName,
         msy.append(src.getY())
 
     plt.clf()
-    #plt.plot(x, y, 'o', mec='r', mfc='none', ms=4)
     plt.plot(x, y, 'r.')
     plt.plot(msx, msy, 'o', mec='r')
-    #plt.plot(rx0, ry0, 'o', mec='g', mfc='none', ms=4)
     plt.plot(rx0, ry0, 'g.')
     plt.plot(mrx, mry, 'gx')
     plt.title('TAN matches')
@@ -170,7 +169,6 @@ def showSipSolutions(srcs, wcs0, andDir, x0, y0, W, H, filterName,
 
     solve = ast.determineWcs2(srcs, **imargs)
     wcs1 = solve.sipWcs
-    # print 'wcs1:', wcs1.getFitsMetadata().toString()
 
     matches = solve.sipMatches
     msx, msy = [], []
@@ -249,6 +247,7 @@ def readSourcesFromXyTable(xyfn):
         src.set(fkey, fi)
     return srcs
 
+
 if __name__ == '__main__':
     mydir = os.path.dirname(__file__)
     # fitscopy coaddSources.fits"[col x=centroid_sdss[1]; y=centroid_sdss[2]; flux=flux_psf]" xy.fits
@@ -261,8 +260,8 @@ if __name__ == '__main__':
 
     # Read original WCS
     fn = os.path.join(mydir, 't2710.wcs')
-    hdr = afwImage.readMetadata(fn)
-    wcs0 = afwImage.makeWcs(hdr)
+    hdr = readMetadata(fn)
+    wcs0 = makeSkyWcs(hdr)
 
     anddir = os.path.join(mydir, 'astrometry_net_data', 'ticket2710')
 
