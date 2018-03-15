@@ -148,7 +148,7 @@ class MultiIndexCache(object):
     def isWithinRange(self, coord, distance):
         """!Is the index within range of the provided coordinates?
 
-        @param coord   Coordinate to check (lsst.afw.coord.Coord)
+        @param coord   ICRS coordinate to check (lsst.afw.geom.SpherPoint)
         @param distance   Angular distance (lsst.afw.geom.Angle)
         """
         return (self._healpix == -1 or healpixDistance(self._healpix, self._nside, coord) <= distance)

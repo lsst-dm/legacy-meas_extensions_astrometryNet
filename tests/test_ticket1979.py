@@ -24,7 +24,6 @@ from __future__ import absolute_import, division, print_function
 import os
 import unittest
 
-from lsst.afw.coord import IcrsCoord
 from lsst.log import Log
 from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryConfig, \
     AstrometryNetDataConfig, ANetBasicAstrometryTask
@@ -51,10 +50,7 @@ class MultipleCatalogStarsTest(unittest.TestCase):
         astrom = ANetBasicAstrometryTask(self.conf, andConfig=self.andConfig)
         astrom.log.setLevel(logLevel)
 
-        ctrCoord = IcrsCoord(
-            215.6 * afwGeom.degrees,
-            53.0 * afwGeom.degrees,
-        )
+        ctrCoord = afwGeom.SpherePoint(215.6, 53.0, afwGeom.degrees)
         cat = astrom.refObjLoader.loadSkyCircle(
             ctrCoord=ctrCoord,
             radius=0.1 * afwGeom.degrees,

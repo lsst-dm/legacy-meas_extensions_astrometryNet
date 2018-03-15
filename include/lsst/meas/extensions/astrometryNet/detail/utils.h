@@ -77,7 +77,7 @@ Implementation for index_t::getCatalog method
 
 Returned schema:
 - id
-- coord: sky position (an lsst::afw::coord::IcrsCoord)
+- coord: ICRS sky position (an lsst::afw::geom::SpherePoint)
 - centroid: centroid on some exposure, if relevant (an lsst::afw::geom::Point2D); returned value is not set
 - hasCentroid: if true then centroid has been set; returned value is false
 - *filterName*_flux: flux in the specified filter (double)
@@ -90,7 +90,7 @@ Returned schema:
 lsst::afw::table::SimpleCatalog
 getCatalogImpl(
     std::vector<index_t*> inds,
-    lsst::afw::coord::Coord const &ctrCoord,
+    lsst::afw::geom::SpherePoint const &ctrCoord,
     lsst::afw::geom::Angle const &radius,
     const char* idCol,
     std::vector<MagColInfo> const& magColInfoList,

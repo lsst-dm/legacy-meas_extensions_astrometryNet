@@ -36,7 +36,6 @@ extern "C" {
 #include "lsst/daf/base/PropertyList.h"
 #include "lsst/afw/table.h"
 #include "lsst/afw/geom.h"
-#include "lsst/afw/coord.h"
 
 namespace lsst {
 namespace meas {
@@ -140,7 +139,7 @@ public:
 
     Returned schema:
     - id
-    - coord: sky position (an lsst::afw::coord::IcrsCoord)
+    - coord: ICRS sky position (an lsst::afw::geom::SpherePoint)
     - centroid: centroid on some exposure, if relevant (an lsst::afw::geom::Point2D);
         returned value is not set
     - hasCentroid: if true then centroid has been set; returned value is false
@@ -153,7 +152,7 @@ public:
     */
     lsst::afw::table::SimpleCatalog getCatalog(
         std::vector<index_t*> inds,
-        lsst::afw::coord::Coord const &ctrCoord,
+        lsst::afw::geom::SpherePoint const &ctrCoord,
         lsst::afw::geom::Angle const &radius,
         const char* idCol,
         std::vector<std::string> const& filterNameList,
@@ -231,6 +230,6 @@ private:
  *
  * Note that this assumes that the astrometry.net catalog reference system is ICRS.
  */
-lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::coord::Coord const& coord);
+lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::geom::SpherePoint const& coord);
 
 }}}}  // namespace lsst::meas::extensions::astrometryNet

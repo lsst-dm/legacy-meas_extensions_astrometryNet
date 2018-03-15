@@ -57,7 +57,7 @@ read_column(
     
 afwTable::SimpleCatalog
 getCatalogImpl(std::vector<index_t*> inds,
-    lsst::afw::coord::Coord const &ctrCoord,
+    lsst::afw::geom::SpherePoint const &ctrCoord,
     lsst::afw::geom::Angle const &radius,
     char const* idCol,
     std::vector<MagColInfo> const& magColInfoList,
@@ -86,9 +86,8 @@ getCatalogImpl(std::vector<index_t*> inds,
         //printf("mag col \"%s\", \"%s\", \"%s\"\n", mc->filterName.c_str(), mc->magCol.c_str(), mc->magErrCol.c_str());
     }
     
-    auto icrsCoord = ctrCoord.toIcrs();
-    double raDeg = icrsCoord.getLongitude().asDegrees();
-    double decDeg = icrsCoord.getLatitude().asDegrees();
+    double raDeg = ctrCoord.getLongitude().asDegrees();
+    double decDeg = ctrCoord.getLatitude().asDegrees();
     double xyz[3];
     radecdeg2xyzarr(raDeg, decDeg, xyz);
     double r2 = deg2distsq(radius.asDegrees());
@@ -278,7 +277,7 @@ getCatalogImpl(std::vector<index_t*> inds,
             // Note that all coords in afwTable catalogs are ICRS; hopefully that's what the 
             // reference catalogs are (and that's what the code assumed before JFB modified it).
             src->setCoord(
-                lsst::afw::coord::IcrsCoord(
+                lsst::afw::geom::SpherePoint(
                     radecs[i * 2 + 0] * afwGeom::degrees,
                     radecs[i * 2 + 1] * afwGeom::degrees
                 )
