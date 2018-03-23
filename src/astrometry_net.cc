@@ -71,7 +71,7 @@ Solver::~Solver() {
 
 lsst::afw::table::SimpleCatalog Solver::getCatalog(
     std::vector<index_t*> inds,
-    lsst::afw::coord::Coord const &ctrCoord,
+    lsst::afw::geom::SpherePoint const &ctrCoord,
     lsst::afw::geom::Angle const &radius,
     const char* idCol,
     std::vector<std::string> const& filterNameList,
@@ -145,8 +145,8 @@ std::shared_ptr<lsst::afw::geom::SkyWcs> Solver::getWcs() {
     tan_t* wcs = &(match->wcstan);
 
     afw::geom::Point2D crpix(wcs->crpix[0], wcs->crpix[1]);
-    auto const crval = afw::coord::IcrsCoord(wcs->crval[0] * afw::geom::degrees,
-                                             wcs->crval[1] * afw::geom::degrees);
+    auto const crval = afw::geom::SpherePoint(wcs->crval[0] * afw::geom::degrees,
+                                              wcs->crval[1] * afw::geom::degrees);
     Eigen::Matrix2d cdMatrix;
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 2; ++j) {
@@ -240,10 +240,9 @@ void Solver::setStars(lsst::afw::table::SourceCatalog const & srcs, int x0, int 
 }
 
 
-lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::coord::Coord const& coord) {
-    lsst::afw::coord::IcrsCoord icrs = coord.toIcrs();
-    return lsst::afw::geom::Angle(healpix_distance_to_radec(hp, nside, icrs.getLongitude().asDegrees(),
-                                                            icrs.getLatitude().asDegrees(), NULL),
+lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::geom::SpherePoint const& coord) {
+    return lsst::afw::geom::Angle(healpix_distance_to_radec(hp, nside, coord.getLongitude().asDegrees(),
+                                                            coord.getLatitude().asDegrees(), NULL),
                                   lsst::afw::geom::degrees);
 }
 

@@ -112,7 +112,7 @@ static void declareSolver(py::module& mod) {
 
     Returned schema:
     - id
-    - coord: sky position (an lsst::afw::coord::IcrsCoord)
+    - coord: ICRS sky position (an lsst::afw::geom::SpherePoint)
     - centroid: centroid on some exposure, if relevant (an lsst::afw::geom::Point2D); returned value is not
     set
     - hasCentroid: if true then centroid has been set; returned value is false

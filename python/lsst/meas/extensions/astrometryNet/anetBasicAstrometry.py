@@ -412,7 +412,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
 
         Valid kwargs include:
 
-        'radecCenter', an afw.coord.Coord giving the RA,Dec position
+        'radecCenter', an afw.geom.SpherePoint giving the ICRS RA,Dec position
            of the center of the field.  This is used to limit the
            search done by Astrometry.net (to make it faster and load
            fewer index files, thereby using less memory).  Defaults to

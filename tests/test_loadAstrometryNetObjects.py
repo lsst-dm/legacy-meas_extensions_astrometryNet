@@ -96,7 +96,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         loadANetObj = LoadAstrometryNetObjectsTask(config=self.config)
 
         ctrCoord = self.wcs.pixelToSky(afwGeom.Point2D(self.ctrPix))
-        radius = ctrCoord.angularSeparation(self.wcs.pixelToSky(afwGeom.Box2D(self.bbox).getMin()))
+        radius = ctrCoord.separation(self.wcs.pixelToSky(afwGeom.Box2D(self.bbox).getMin()))
 
         loadRes = loadANetObj.loadSkyCircle(ctrCoord=ctrCoord, radius=radius, filterName="r")
         self.assertEqual(len(loadRes.refCat), self.desNumStarsInSkyCircle)
