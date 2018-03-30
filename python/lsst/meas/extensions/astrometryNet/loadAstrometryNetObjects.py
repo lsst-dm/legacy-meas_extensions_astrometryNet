@@ -81,13 +81,21 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         # because astrometry may not be used, in which case it may not be properly configured
 
     @pipeBase.timeMethod
-    def loadSkyCircle(self, ctrCoord, radius, filterName=None):
+    def loadSkyCircle(self, ctrCoord, radius, filterName=None, epoch=None):
         """!Load reference objects that overlap a circular sky region
 
         @param[in] ctrCoord  center of search region (an afwGeom.Coord)
         @param[in] radius  radius of search region (an afwGeom.Angle)
         @param[in] filterName  name of filter, or None for the default filter;
             used for flux values in case we have flux limits (which are not yet implemented)
+        @param[in] epoch  Epoch for proper motion and parallax correction
+                    (an astropy.time.Time), or None
+
+        No proper motion correction is made, since our astrometry.net catalogs
+        typically don't support that, and even if they do they format is uncertain.
+        Users interested in proper motion corrections should use the
+        lsst.meas.algorithms.LoadIndexedReferenceObjectsTask or they will need to
+        subclass and define how the proper motion correction is to be done.
 
         @return an lsst.pipe.base.Struct containing:
         - refCat a catalog of reference objects with the
