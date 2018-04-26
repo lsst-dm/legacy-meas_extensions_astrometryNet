@@ -10,6 +10,8 @@ extern "C" {
 #undef ATTRIB_FORMAT
 #undef FALSE
 #undef TRUE
+#undef DEG_PER_RAD
+#undef RAD_PER_DEG
 }
 
 #include <set>
