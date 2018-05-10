@@ -141,6 +141,11 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
 
         fluxField = getRefFluxField(schema=refCat.schema, filterName=filterName)
 
+        # NOTE: sourceSelectors require contiguous catalogs, so ensure
+        # contiguity now, so views are preserved from here on.
+        if not refCat.isContiguous():
+            refCat = refCat.copy(deep=True)
+
         self.log.debug("found %d objects", len(refCat))
         return pipeBase.Struct(
             refCat=refCat,
