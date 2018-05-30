@@ -7,7 +7,6 @@ from __future__ import absolute_import, division, print_function
 
 __all__ = ["AstrometryNetDataConfig"]
 
-from past.builtins import execfile
 from builtins import object
 
 
@@ -98,7 +97,9 @@ class AstrometryNetDataConfig(object):
     def load(self, fn):
         # Hold on to your socks!
         loc = dict(root=self)
-        execfile(fn, globals(), loc)
+        with open(fn, 'rb') as file:
+            code = compile(file.read(), fn, 'exec')
+            exec(code, globals(), loc)
 
     def __init__(self, **kwargs):
         self.setDefaults()
