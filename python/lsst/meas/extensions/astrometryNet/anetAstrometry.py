@@ -224,8 +224,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
         \note ignores config.forceKnownWcs
         """
-        with self.distortionContext(sourceCat=sourceCat, exposure=exposure) as bbox:
-            results = self._astrometry(sourceCat=sourceCat, exposure=exposure, bbox=bbox)
+        results = self._astrometry(sourceCat=sourceCat, exposure=exposure)
 
         if results.matches:
             self.refitWcs(sourceCat=sourceCat, exposure=exposure, matches=results.matches)
