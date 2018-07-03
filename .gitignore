@@ -9,6 +9,7 @@ _build.*
 .cache
 .pytest_cache
 pytest_session.txt
+.coverage
 config.log
 doc/html
 doc/doxygen.conf
