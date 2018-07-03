@@ -435,9 +435,8 @@ class ANetAstrometryTask(pipeBase.Task):
             except lsst.pex.exceptions.LengthError as e:
                 self.log.warn("Unable to fit SIP: %s" % e)
 
-            self.log.info("Astrometric scatter: %f arcsec (%s non-linear terms, %d matches, %d rejected)" %
-                          (scatter.asArcseconds(), "with" if wcs.hasDistortion() else "without",
-                           len(matches), numRejected))
+            self.log.info("Astrometric scatter: %f arcsec (%d matches, %d rejected)" %
+                          (scatter.asArcseconds(), len(matches), numRejected))
             exposure.setWcs(wcs)
 
             # Apply WCS to sources
