@@ -82,6 +82,9 @@ def indicesOfGoodPoints(x, y, s, order=1, nsigma=3, maxiter=100):
         f = [lsf.valueAt(value) for value in x]
 
         sigma = (y-f).std()
+        if sigma == 0:
+            # all remaining points are good; short circuit
+            return newidx if newidx else idx
         deviance = np.fabs((y - f) / sigma)
         newidx = np.flatnonzero(deviance < nsigma)
 
