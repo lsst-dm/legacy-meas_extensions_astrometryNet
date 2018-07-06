@@ -33,7 +33,7 @@ import lsstDebug
 import lsst.pex.exceptions
 import lsst.afw.geom as afwGeom
 from lsst.afw.cameraGeom import PIXELS, TAN_PIXELS
-from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey
+from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey, updateSourceCoords
 import lsst.pex.config as pexConfig
 import lsst.pipe.base as pipeBase
 from lsst.meas.astrom import displayAstrometry
@@ -140,6 +140,7 @@ class ANetAstrometryTask(pipeBase.Task):
     into your debug.py file and run photoCalTask.py with the \c --debug flag.
     """
     ConfigClass = ANetAstrometryConfig
+    _DefaultName = "astrometricSolver"
 
     def __init__(self, schema, refObjLoader=None, **kwds):
         """!Create the astrometric calibration task.  Most arguments are simply passed onto pipe.base.Task.
@@ -440,9 +441,7 @@ class ANetAstrometryTask(pipeBase.Task):
             exposure.setWcs(wcs)
 
             # Apply WCS to sources
-            for index, source in enumerate(sourceCat):
-                sky = wcs.pixelToSky(source.getX(), source.getY())
-                source.setCoord(sky)
+            updateSourceCoords(wcs, sourceCat)
         else:
             self.log.warn("Not calculating a SIP solution; matches may be suspect")
 
