@@ -80,13 +80,13 @@ def main():
             print()
 
     else:
-        import pyfits
+        from astropy.io import fits
         import numpy as np
 
         fitscols = []
-        fitscols.append(pyfits.Column(name='RA', array=np.array([r.getRa().asDegrees() for r in ref]),
+        fitscols.append(fits.Column(name='RA', array=np.array([r.getRa().asDegrees() for r in ref]),
                                       format='D', unit='deg'))
-        fitscols.append(pyfits.Column(name='DEC', array=np.array([r.getDec().asDegrees() for r in ref]),
+        fitscols.append(fits.Column(name='DEC', array=np.array([r.getDec().asDegrees() for r in ref]),
                                       format='D', unit='deg'))
         for c, d in zip(cols, tagdata):
             fmap = {'Int64': 'K',
@@ -96,13 +96,13 @@ def main():
                     }
             if c.arraysize > 1:
                 # May have to reshape the array as well...
-                fitscols.append(pyfits.Column(name=c.name, array=np.array(d),
+                fitscols.append(fits.Column(name=c.name, array=np.array(d),
                                               format='%i%s' % (c.arraysize, fmap.get(c.ctype, 'D'))))
             else:
-                fitscols.append(pyfits.Column(name=c.name, array=np.array(d),
+                fitscols.append(fits.Column(name=c.name, array=np.array(d),
                                               format=fmap.get(c.ctype, 'D')))
 
-        pyfits.new_table(fitscols).writeto(opt.outfn, clobber=True)
+        fits.new_table(fitscols).writeto(opt.outfn, clobber=True)
         print('Wrote FITS table', opt.outfn)
 
     return 0

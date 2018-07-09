@@ -13,7 +13,7 @@ from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
 from lsst.log import Log
 
-import pyfits
+from astropy.io import fits
 
 '''
 This file was produced by dstn trying to reproduce and diagnose the
@@ -225,7 +225,7 @@ def readSourcesFromXyTable(xyfn):
     Read sources from a plain FITS table of x,y,flux and put
     into an afw Catalog.
     '''
-    P = pyfits.open(xyfn)[1].data
+    P = fits.open(xyfn)[1].data
     x = P['x']
     y = P['y']
     f = P['flux']

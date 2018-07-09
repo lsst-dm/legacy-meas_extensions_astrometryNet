@@ -8,7 +8,7 @@ from builtins import object
 import os
 
 import numpy as np
-import pyfits
+from astropy.io import fits
 
 import lsst.utils
 from lsst.log import Log
@@ -207,17 +207,17 @@ class AstrometryNetCatalog(object):
         maxLength = max(len(fn) for ind in self._multiInds for fn in ind._filenameList) + 1
 
         # First table
-        first = pyfits.new_table([pyfits.Column(name="id", format="K"),
-                                  pyfits.Column(name="healpix", format="K"),
-                                  pyfits.Column(name="nside", format="K"),
-                                  ], nrows=len(self._multiInds))
+        first = fits.new_table([fits.Column(name="id", format="K"),
+                                fits.Column(name="healpix", format="K"),
+                                fits.Column(name="nside", format="K"),
+                                ], nrows=len(self._multiInds))
         first.data.field("id")[:] = np.arange(len(self._multiInds), dtype=int)
         first.data.field("healpix")[:] = np.array([ind._healpix for ind in self._multiInds])
         first.data.field("nside")[:] = np.array([ind._nside for ind in self._multiInds])
 
         # Second table
-        second = pyfits.new_table([pyfits.Column(name="id", format="K"),
-                                   pyfits.Column(name="filename", format="%dA" % (maxLength)),
+        second = fits.new_table([fits.Column(name="id", format="K"),
+                                 fits.Column(name="filename", format="%dA" % (maxLength)),
                                    ], nrows=numFilenames)
         ident = second.data.field("id")
         filenames = second.data.field("filename")
@@ -228,7 +228,7 @@ class AstrometryNetCatalog(object):
                 filenames[i] = fn
                 i += 1
 
-        pyfits.HDUList([pyfits.PrimaryHDU(), first, second]).writeto(outName, clobber=True)
+        fits.HDUList([fits.PrimaryHDU(), first, second]).writeto(outName, clobber=True)
 
     def _initFromCache(self, filename):
         """Initialise from a cache file
@@ -236,7 +236,7 @@ class AstrometryNetCatalog(object):
         Ingest the cache file written by the 'writeCache' method and
         use that to quickly instantiate the AstrometryNetCatalog.
         """
-        with pyfits.open(filename) as hduList:
+        with fits.open(filename) as hduList:
             first = hduList[1].data
             second = hduList[2].data
 
