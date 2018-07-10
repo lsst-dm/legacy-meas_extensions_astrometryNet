@@ -102,7 +102,7 @@ def main():
                 fitscols.append(fits.Column(name=c.name, array=np.array(d),
                                               format=fmap.get(c.ctype, 'D')))
 
-        fits.new_table(fitscols).writeto(opt.outfn, clobber=True)
+        fits.BinTableHDU.from_columns(fitscols).writeto(opt.outfn, clobber=True)
         print('Wrote FITS table', opt.outfn)
 
     return 0

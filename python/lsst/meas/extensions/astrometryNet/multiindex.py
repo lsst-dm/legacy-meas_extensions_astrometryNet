@@ -207,18 +207,18 @@ class AstrometryNetCatalog(object):
         maxLength = max(len(fn) for ind in self._multiInds for fn in ind._filenameList) + 1
 
         # First table
-        first = fits.new_table([fits.Column(name="id", format="K"),
-                                fits.Column(name="healpix", format="K"),
-                                fits.Column(name="nside", format="K"),
-                                ], nrows=len(self._multiInds))
+        first = fits.BinTableHDU.from_columns([fits.Column(name="id", format="K"),
+                                               fits.Column(name="healpix", format="K"),
+                                               fits.Column(name="nside", format="K"),
+                                               ], nrows=len(self._multiInds))
         first.data.field("id")[:] = np.arange(len(self._multiInds), dtype=int)
         first.data.field("healpix")[:] = np.array([ind._healpix for ind in self._multiInds])
         first.data.field("nside")[:] = np.array([ind._nside for ind in self._multiInds])
 
         # Second table
-        second = fits.new_table([fits.Column(name="id", format="K"),
-                                 fits.Column(name="filename", format="%dA" % (maxLength)),
-                                   ], nrows=numFilenames)
+        second = fits.BinTableHDU.from_columns([fits.Column(name="id", format="K"),
+                                                fits.Column(name="filename", format="%dA" % (maxLength)),
+                                                ], nrows=numFilenames)
         ident = second.data.field("id")
         filenames = second.data.field("filename")
         i = 0
