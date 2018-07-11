@@ -49,6 +49,7 @@ def main():
     for c in cols:
         print('  column:', c.name, c.fitstype, c.ctype, c.units, c.arraysize)
     colnames = [c.name for c in cols]
+    print('  column names:', colnames)
 
     tagdata = []
     for c in cols:
@@ -85,9 +86,9 @@ def main():
 
         fitscols = []
         fitscols.append(fits.Column(name='RA', array=np.array([r.getRa().asDegrees() for r in ref]),
-                                      format='D', unit='deg'))
+                                    format='D', unit='deg'))
         fitscols.append(fits.Column(name='DEC', array=np.array([r.getDec().asDegrees() for r in ref]),
-                                      format='D', unit='deg'))
+                                    format='D', unit='deg'))
         for c, d in zip(cols, tagdata):
             fmap = {'Int64': 'K',
                     'Int': 'J',
@@ -97,10 +98,10 @@ def main():
             if c.arraysize > 1:
                 # May have to reshape the array as well...
                 fitscols.append(fits.Column(name=c.name, array=np.array(d),
-                                              format='%i%s' % (c.arraysize, fmap.get(c.ctype, 'D'))))
+                                            format='%i%s' % (c.arraysize, fmap.get(c.ctype, 'D'))))
             else:
                 fitscols.append(fits.Column(name=c.name, array=np.array(d),
-                                              format=fmap.get(c.ctype, 'D')))
+                                            format=fmap.get(c.ctype, 'D')))
 
         fits.BinTableHDU.from_columns(fitscols).writeto(opt.outfn, clobber=True)
         print('Wrote FITS table', opt.outfn)

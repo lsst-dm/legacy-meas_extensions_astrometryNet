@@ -738,7 +738,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         fig.clf()
         try:
             fig.canvas._tkcanvas._root().lift()  # == Tk's raise, but raise is a python reserved word
-        except:                                 # protect against API changes
+        except Exception:                                 # protect against API changes
             pass
 
         num = len(matches)

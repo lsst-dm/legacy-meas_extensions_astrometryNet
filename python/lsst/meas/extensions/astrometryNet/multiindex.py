@@ -19,18 +19,19 @@ from .astrometryNetDataConfig import AstrometryNetDataConfig
 def getIndexPath(fn):
     """!Get the path to the specified astrometry.net index file
 
-    No effort is made to confirm that the file exists, so it may be used to locate the
-    path to a non-existent file (e.g., to write).
+    No effort is made to confirm that the file exists, so it may be used to
+    locate the path to a non-existent file (e.g., to write).
 
-    @param[in] fn  path to index file; if relative, then relative to astrometry_net_data
-        if that product is setup, else relative to the current working directory
+    @param[in] fn  path to index file; if relative, then relative to
+        astrometry_net_data if that product is setup, else relative to the
+        current working directory
     @return the absolute path to the index file
     """
     if os.path.isabs(fn):
         return fn
     try:
         andir = lsst.utils.getPackageDir('astrometry_net_data')
-    except:
+    except Exception:
         # Relative to cwd
         return os.path.abspath(fn)
     return os.path.join(andir, fn)
@@ -43,7 +44,7 @@ def getConfigFromEnvironment():
     """
     try:
         anDir = lsst.utils.getPackageDir('astrometry_net_data')
-    except:
+    except Exception:
         anDir = os.getcwd()
         andConfigPath = "andConfig.py"
         if not os.path.exists(andConfigPath):
@@ -60,10 +61,11 @@ def getConfigFromEnvironment():
 
 
 class MultiIndexCache(object):
-    """A wrapper for the multiindex_t, which only reads the data when it needs to
+    """A wrapper for the multiindex_t, which only reads the data when it
+    needs to
 
-    The MultiIndexCache may be instantiated directly, or via the 'fromFilenameList'
-    class method, which loads it from a list of filenames.
+    The MultiIndexCache may be instantiated directly, or via the
+    'fromFilenameList' class method, which loads it from a list of filenames.
     """
 
     def __init__(self, filenameList, healpix, nside):
@@ -196,11 +198,12 @@ class AstrometryNetCatalog(object):
     def writeCache(self):
         """Write a cache file
 
-        The cache file is a FITS file with all the required information to build the
-        AstrometryNetCatalog quickly.  The first table extension contains a row for each multiindex,
-        storing the healpix and nside values.  The second table extension contains a row
-        for each filename in all the multiindexes.  The two may be JOINed through the
-        'id' column.
+        The cache file is a FITS file with all the required information to
+        build the AstrometryNetCatalog quickly.  The first table extension
+        contains a row for each multiindex, storing the healpix and nside
+        values.  The second table extension contains a row for each filename
+        in all the multiindexes.  The two may be JOINed through the 'id'
+        column.
         """
         outName = getIndexPath(self._cacheFilename)
         numFilenames = sum(len(ind._filenameList) for ind in self._multiInds)
