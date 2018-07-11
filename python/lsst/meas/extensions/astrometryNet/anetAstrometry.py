@@ -320,7 +320,7 @@ class ANetAstrometryTask(pipeBase.Task):
         matchMeta = astrom.getMatchMetadata()
         if matches is None or len(matches) == 0:
             raise RuntimeError("No astrometric matches")
-        self.log.info("%d astrometric matches" % (len(matches)))
+        self.log.info("%d astrometric matches", len(matches))
 
         if self._display:
             frame = lsstDebug.Info(__name__).frame
@@ -362,7 +362,7 @@ class ANetAstrometryTask(pipeBase.Task):
         matchMeta = astrom.getMatchMetadata()
         if matches is None or len(matches) == 0:
             raise RuntimeError("No astrometric matches")
-        self.log.info("%d astrometric matches" % (len(matches)))
+        self.log.info("%d astrometric matches", len(matches))
 
         # Note that this is the Wcs for the provided positions, which may be distorted
         exposure.setWcs(astrom.getWcs())
@@ -434,10 +434,10 @@ class ANetAstrometryTask(pipeBase.Task):
                 wcs, scatter = fitWcs(wcs, title="Final astrometry")
 
             except lsst.pex.exceptions.LengthError as e:
-                self.log.warn("Unable to fit SIP: %s" % e)
+                self.log.warn("Unable to fit SIP: %s", e)
 
-            self.log.info("Astrometric scatter: %f arcsec (%d matches, %d rejected)" %
-                          (scatter.asArcseconds(), len(matches), numRejected))
+            self.log.info("Astrometric scatter: %f arcsec (%d matches, %d rejected)",
+                          scatter.asArcseconds(), len(matches), numRejected)
             exposure.setWcs(wcs)
 
             # Apply WCS to sources
