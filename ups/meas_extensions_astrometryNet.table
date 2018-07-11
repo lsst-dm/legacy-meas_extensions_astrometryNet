@@ -5,6 +5,7 @@ setupRequired(meas_astrom)
 setupRequired(pex_config)
 setupRequired(pipe_base)
 setupRequired(utils)
+setupRequired(astropy)
 
 setupRequired(wcslib >= 4.4.4)
 setupRequired(astrometry_net)

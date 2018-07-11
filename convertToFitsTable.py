@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 """Script to convert meas/astrom test data files to the new table paradigm.
 
-The original files are text files with id, x, y, ra, dec, psfFlux, flags columns.
+The original files are text files with id, x, y, ra, dec, psfFlux, flags
+columns.
 
-The new files are FITS binary tables that can be loaded into afw.table.SourceCatalog
-objects, and contain roughly equivalent fields that mimic those produced by common
-measurement algorithms in meas/alg.
+The new files are FITS binary tables that can be loaded into
+afw.table.SourceCatalog objects, and contain roughly equivalent fields that
+mimic those produced by common measurement algorithms in meas/alg.
 """
 from __future__ import print_function
 
@@ -89,6 +90,7 @@ def main(inputName, outputName):
                     else:
                         record.set(newName, True)
     outputCat.writeFits(outputName)
+
 
 if __name__ == "__main__":
     import sys
