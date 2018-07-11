@@ -28,10 +28,9 @@ from lsst.afw.table import SimpleCatalog, SourceCatalog
 import lsst.utils.tests
 import lsst.afw.geom as afwGeom
 from lsst.log import Log
-from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryTask
+from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryTask, cleanBadPoints
 import lsst.meas.astrom.sip as sip
 import lsst.meas.astrom.sip.genDistortedImage as distort
-import lsst.meas.astrom.sip.cleanBadPoints as cleanBadPoints
 from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 

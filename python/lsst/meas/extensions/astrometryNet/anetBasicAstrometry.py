@@ -46,6 +46,7 @@ import lsst.meas.algorithms.utils as maUtils
 from .loadAstrometryNetObjects import LoadAstrometryNetObjectsTask, LoadMultiIndexes
 from lsst.meas.astrom import displayAstrometry, makeMatchStatisticsInRadians
 import lsst.meas.astrom.sip as astromSip
+from . import cleanBadPoints
 
 
 class InitialAstrometry(object):
@@ -170,7 +171,7 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
         min=0.0,
     )
     cleaningParameter = RangeField(
-        doc="Sigma-clipping parameter in sip/cleanBadPoints.py",
+        doc="Sigma-clipping parameter in cleanBadPoints.py",
         dtype=float,
         default=3.0,
         min=0.0,
@@ -844,7 +845,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                 self.loginfo('Reference range: RA [%.3f, %.3f], Dec [%.3f, %.3f]' %
                              (min(R2), max(R2), min(D2), max(D2)))
             raise RuntimeError('No matches found between image and catalogue')
-        matches = astromSip.cleanBadPoints.clean(matches, wcs, nsigma=clean)
+        matches = cleanBadPoints.clean(matches, wcs, nsigma=clean)
         return matches
 
     def getColumnName(self, filterName, columnMap, default=None):

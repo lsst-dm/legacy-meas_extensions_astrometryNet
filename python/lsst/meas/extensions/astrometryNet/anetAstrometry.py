@@ -33,7 +33,7 @@ import lsstDebug
 import lsst.pex.exceptions
 import lsst.afw.geom as afwGeom
 from lsst.afw.cameraGeom import PIXELS, TAN_PIXELS
-from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey
+from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey, updateSourceCoords
 import lsst.pex.config as pexConfig
 import lsst.pipe.base as pipeBase
 from lsst.meas.astrom import displayAstrometry
@@ -140,6 +140,7 @@ class ANetAstrometryTask(pipeBase.Task):
     into your debug.py file and run photoCalTask.py with the \c --debug flag.
     """
     ConfigClass = ANetAstrometryConfig
+    _DefaultName = "astrometricSolver"
 
     def __init__(self, schema, refObjLoader=None, **kwds):
         """!Create the astrometric calibration task.  Most arguments are simply passed onto pipe.base.Task.
@@ -224,8 +225,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
         \note ignores config.forceKnownWcs
         """
-        with self.distortionContext(sourceCat=sourceCat, exposure=exposure) as bbox:
-            results = self._astrometry(sourceCat=sourceCat, exposure=exposure, bbox=bbox)
+        results = self._astrometry(sourceCat=sourceCat, exposure=exposure)
 
         if results.matches:
             self.refitWcs(sourceCat=sourceCat, exposure=exposure, matches=results.matches)
@@ -320,7 +320,7 @@ class ANetAstrometryTask(pipeBase.Task):
         matchMeta = astrom.getMatchMetadata()
         if matches is None or len(matches) == 0:
             raise RuntimeError("No astrometric matches")
-        self.log.info("%d astrometric matches" % (len(matches)))
+        self.log.info("%d astrometric matches", len(matches))
 
         if self._display:
             frame = lsstDebug.Info(__name__).frame
@@ -362,7 +362,7 @@ class ANetAstrometryTask(pipeBase.Task):
         matchMeta = astrom.getMatchMetadata()
         if matches is None or len(matches) == 0:
             raise RuntimeError("No astrometric matches")
-        self.log.info("%d astrometric matches" % (len(matches)))
+        self.log.info("%d astrometric matches", len(matches))
 
         # Note that this is the Wcs for the provided positions, which may be distorted
         exposure.setWcs(astrom.getWcs())
@@ -434,17 +434,14 @@ class ANetAstrometryTask(pipeBase.Task):
                 wcs, scatter = fitWcs(wcs, title="Final astrometry")
 
             except lsst.pex.exceptions.LengthError as e:
-                self.log.warn("Unable to fit SIP: %s" % e)
+                self.log.warn("Unable to fit SIP: %s", e)
 
-            self.log.info("Astrometric scatter: %f arcsec (%s non-linear terms, %d matches, %d rejected)" %
-                          (scatter.asArcseconds(), "with" if wcs.hasDistortion() else "without",
-                           len(matches), numRejected))
+            self.log.info("Astrometric scatter: %f arcsec (%d matches, %d rejected)",
+                          scatter.asArcseconds(), len(matches), numRejected)
             exposure.setWcs(wcs)
 
             # Apply WCS to sources
-            for index, source in enumerate(sourceCat):
-                sky = wcs.pixelToSky(source.getX(), source.getY())
-                source.setCoord(sky)
+            updateSourceCoords(wcs, sourceCat)
         else:
             self.log.warn("Not calculating a SIP solution; matches may be suspect")
 
