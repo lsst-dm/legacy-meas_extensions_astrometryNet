@@ -231,7 +231,7 @@ class AstrometryNetCatalog(object):
                 filenames[i] = fn
                 i += 1
 
-        fits.HDUList([fits.PrimaryHDU(), first, second]).writeto(outName, clobber=True)
+        fits.HDUList([fits.PrimaryHDU(), first, second]).writeto(outName, overwrite=True)
 
     def _initFromCache(self, filename):
         """Initialise from a cache file
