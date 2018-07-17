@@ -192,7 +192,7 @@ void finalize() {
     log_to(stdout);
 }
 
-}  // namespace <anonymous>
+}  // namespace
 
 PYBIND11_MODULE(astrometry_net, mod) {
     // code that is run at import time
@@ -212,7 +212,7 @@ PYBIND11_MODULE(astrometry_net, mod) {
     declareSolver(mod);
 }
 
-}
-}
-}
-}  // namespace lsst::meas::extensions::astrometryNet
+}  // namespace astrometryNet
+}  // namespace extensions
+}  // namespace meas
+}  // namespace lsst
