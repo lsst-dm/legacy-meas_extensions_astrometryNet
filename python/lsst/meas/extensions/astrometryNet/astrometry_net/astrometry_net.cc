@@ -192,11 +192,9 @@ void finalize() {
     log_to(stdout);
 }
 
-}  // namespace <anonymous>
+}  // namespace
 
-PYBIND11_PLUGIN(astrometry_net) {
-    py::module mod("astrometry_net");
-
+PYBIND11_MODULE(astrometry_net, mod) {
     // code that is run at import time
     fits_use_error_system();
     start_an_logging();
@@ -212,10 +210,9 @@ PYBIND11_PLUGIN(astrometry_net) {
     declareMultiIndex(mod);
     declareIndex(mod);
     declareSolver(mod);
+}
 
-    return mod.ptr();
-}
-}
-}
-}
-}  // namespace lsst::meas::extensions::astrometryNet
+}  // namespace astrometryNet
+}  // namespace extensions
+}  // namespace meas
+}  // namespace lsst
