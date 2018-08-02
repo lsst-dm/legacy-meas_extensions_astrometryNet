@@ -69,7 +69,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             x += a2 * (dx**2)
             src.set(xKey, x + x0)
             src.set(yKey, src.get(yKey) - 500 + y0)
-        bbox = afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Extent2I(1000, 1000))
+        bbox = afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Extent2I(1000, 1000), invert=False)
         res = self.astrom.determineWcs2(cat, bbox=bbox)
         self.assertIsNotNone(res.sipWcs, "Failed to fit SIP terms")
         print('Got result', res)
@@ -100,7 +100,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
     def singleTestInstance(self, filename, distortFunc):
         cat = self.loadCatalogue(self.filename)
         img = distort.distortList(cat, distortFunc)
-        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
+        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000), invert=False)
         res = self.astrom.determineWcs2(img, bbox=bbox)
         imgWcs = res.getWcs()
 
@@ -136,7 +136,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             src.set(xKey, src.get(xKey) - 500)
             src.set(yKey, src.get(yKey) - 500)
 
-        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
+        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000), invert=False)
         res = self.astrom.determineWcs2(cat, bbox=bbox)
         catWcs = res.getWcs()
 

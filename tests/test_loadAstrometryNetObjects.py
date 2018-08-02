@@ -45,7 +45,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         self.config = LoadAstrometryNetObjectsTask.ConfigClass()
         self.config.pixelMargin = 50  # Original default when these tests were written
 
-        self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(3001, 3001))
+        self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(3001, 3001), invert=False)
         self.ctrPix = afwGeom.Point2I(1500, 1500)
         metadata = PropertySet()
         metadata.set("RADESYS", "FK5")

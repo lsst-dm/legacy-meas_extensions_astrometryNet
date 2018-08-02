@@ -46,7 +46,8 @@ class MultiIndexTest(unittest.TestCase):
         self.srcCat = afwTable.SourceCatalog.readFits(os.path.join(testDir, "v695833-e0-c000.xy.fits"))
 
         # The .xy.fits file has sources in the range ~ [0,2000],[0,4500]
-        self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(2048, 4612))  # approximate
+        self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(2048, 4612),
+                                  invert=False)  # approximate
         self.exposure = afwImg.ExposureF(os.path.join(testDir, "v695833-e0-c000-a00.sci.fits"))
 
         # Set up local astrometry_net_data
