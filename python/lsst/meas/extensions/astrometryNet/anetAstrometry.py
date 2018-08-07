@@ -160,9 +160,9 @@ class ANetAstrometryTask(pipeBase.Task):
                                             doc="centroid distorted for astrometry solver")
         self.centroidYKey = schema.addField(self.distortedName + "_y", type="D",
                                             doc="centroid distorted for astrometry solver")
-        self.centroidXErrKey = schema.addField(self.distortedName + "_xSigma", type="F",
+        self.centroidXErrKey = schema.addField(self.distortedName + "_xErr", type="F",
                                                doc="centroid distorted err for astrometry solver")
-        self.centroidYErrKey = schema.addField(self.distortedName + "_ySigma", type="F",
+        self.centroidYErrKey = schema.addField(self.distortedName + "_yErr", type="F",
                                                doc="centroid distorted err for astrometry solver")
         self.centroidFlagKey = schema.addField(self.distortedName + "_flag", type="Flag",
                                                doc="centroid distorted flag astrometry solver")

@@ -116,7 +116,7 @@ getCatalogImpl(std::vector<index_t*> inds,
         if (mc->hasErr()) {
             fluxErrKey.push_back(
                 schema.addField<double>(
-                    mc->filterName + "_fluxSigma",
+                    mc->filterName + "_fluxErr",
                     mc->filterName + " flux uncertainty (sigma)"));
         }
     }

@@ -87,7 +87,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         filterNameList = ['u', 'g', 'r', 'i', 'z']
         for filterName in filterNameList:
             schema.find(filterName + "_flux").key
-            schema.find(filterName + "_fluxSigma").key
+            schema.find(filterName + "_fluxErr").key
         for fieldName in ("coord_ra", "coord_dec", "centroid_x", "centroid_y", "hasCentroid",
                           "photometric", "resolved"):
             schema.find(fieldName)
@@ -118,7 +118,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         for filterName in ['u', 'g', 'r', 'i', 'z']:
             schema.find(filterName + "_flux")
             with self.assertRaises(KeyError):
-                schema.find(filterName + "_fluxSigma")
+                schema.find(filterName + "_fluxErr")
 
     def testRequestForeignFilter(self):
         """The user requests a filter not in the astrometry.net catalog.
@@ -142,7 +142,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         schema = refCat.getSchema()
         for filterName in filterNameList:
             schema.find(filterName + "_flux")
-            schema.find(filterName + '_fluxSigma')
+            schema.find(filterName + '_fluxErr')
 
     def testDifferentMagNames(self):
         """The astrometry.net catalog's magnitude columns are not named after filters.
@@ -167,7 +167,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         schema = refCat.getSchema()
         for nm in filterNameList:
             schema.find(nm + "_flux")
-            schema.find(nm + '_fluxSigma')
+            schema.find(nm + '_fluxErr')
 
     def assertObjInBBox(self, refCat, bbox, wcs):
         """Assert that all reference objects are inside the specified pixel bounding box plus a margin

@@ -145,7 +145,7 @@ public:
         returned value is not set
     - hasCentroid: if true then centroid has been set; returned value is false
     - *filterName*_flux: flux in the specified filter (double)
-    - *filterName*_fluxSigma: flux uncertainty in the specified filter (double)
+    - *filterName*_fluxErr: flux uncertainty in the specified filter (double)
     - resolved (if starGalCol specified): true if object is not resolved
     - variable (if varCol specified): true if brightness is variable
     - photometric: true if not resolved (or starGalCol blank) and not variable (or varCol blank);
