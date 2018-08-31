@@ -224,7 +224,7 @@ void Solver::setStars(lsst::afw::table::SourceCatalog const & srcs, int x0, int 
     for (size_t i=0; i<N; ++i) {
         double const x    = srcs[i].getX();
         double const y    = srcs[i].getY();
-        double const flux = srcs[i].getPsfFlux();
+        double const flux = srcs[i].getPsfInstFlux();
         starxy_set(starxy, i, x - x0, y - y0);
         starxy_set_flux(starxy, i, flux);
     }

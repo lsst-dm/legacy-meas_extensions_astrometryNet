@@ -880,7 +880,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         badkeys = [goodsources.getSchema().find(name).key for name in self.config.badFlags]
 
         for s in sourceCat:
-            if np.isfinite(s.getX()) and np.isfinite(s.getY()) and np.isfinite(s.getPsfFlux()) \
+            if np.isfinite(s.getX()) and np.isfinite(s.getY()) and np.isfinite(s.getPsfInstFlux()) \
                     and self._isGoodSource(s, badkeys):
                 goodsources.append(s)
                 xybb.include(afwGeom.Point2D(s.getX() - x0, s.getY() - y0))

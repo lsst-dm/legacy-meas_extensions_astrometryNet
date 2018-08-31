@@ -34,7 +34,7 @@ def plotMatches(imgsources, refsources, matches, wcs, W, H, prefix,
     # Image sources
     ix = np.array([s.getXAstrom() for s in imgsources])
     iy = np.array([s.getYAstrom() for s in imgsources])
-    iflux = np.array([s.getPsfFlux() for s in imgsources])
+    iflux = np.array([s.getPsfInstFlux() for s in imgsources])
     fluxes = np.argsort(-iflux)
     # First 200: red dots
     someFluxes = fluxes[:200]
@@ -134,9 +134,9 @@ def plotPhotometry(imgsources, refsources, matches, prefix, band=None,
     def flux2mag(f):
         return -2.5*np.log10(f)
 
-    refmag = np.array([flux2mag(s.getPsfFlux()) for s in refsources])
-    imgflux = np.array([s.getPsfFlux() for s in imgsources])
-    imgfluxerr = np.array([s.getPsfFluxErr() for s in imgsources])
+    refmag = np.array([flux2mag(s.getPsfInstFlux()) for s in refsources])
+    imgflux = np.array([s.getPsfInstFlux() for s in imgsources])
+    imgfluxerr = np.array([s.getPsfInstFluxErr() for s in imgsources])
 
     # Cut to fluxes that aren't silly and get mags of matched sources.
     okflux = (imgflux[MI] > 1)
