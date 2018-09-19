@@ -137,8 +137,8 @@ class TestAstrometricSolver(lsst.utils.tests.TestCase):
         sourceSchema = self.makeSourceSchema()
         sourceCat = afwTable.SourceCatalog(sourceSchema)
         sourceCentroidKey = afwTable.Point2DKey(sourceSchema["slot_Centroid"])
-        sourceFluxKey = sourceSchema["slot_PsfFlux_flux"].asKey()
-        sourceFluxErrKey = sourceSchema["slot_PsfFlux_fluxErr"].asKey()
+        sourceFluxKey = sourceSchema["slot_PsfFlux_instFlux"].asKey()
+        sourceFluxErrKey = sourceSchema["slot_PsfFlux_instFluxErr"].asKey()
 
         sourceCat.reserve(len(refCat))
         for refObj in refCat:
