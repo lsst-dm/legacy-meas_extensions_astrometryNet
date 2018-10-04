@@ -17,15 +17,22 @@ from .astrometryNetDataConfig import AstrometryNetDataConfig
 
 
 def getIndexPath(fn):
-    """!Get the path to the specified astrometry.net index file
+    """Get the path to the specified astrometry.net index file
 
     No effort is made to confirm that the file exists, so it may be used to
     locate the path to a non-existent file (e.g., to write).
 
-    @param[in] fn  path to index file; if relative, then relative to
+    Parameters
+    ----------
+    fn :
+        path to index file; if relative, then relative to
         astrometry_net_data if that product is setup, else relative to the
         current working directory
-    @return the absolute path to the index file
+
+    Returns
+    -------
+    result :
+        the absolute path to the index file
     """
     if os.path.isabs(fn):
         return fn
@@ -66,16 +73,19 @@ class MultiIndexCache(object):
 
     The MultiIndexCache may be instantiated directly, or via the
     'fromFilenameList' class method, which loads it from a list of filenames.
+
+    Parameters
+    ----------
+    filenameList :
+        List of filenames; first is the multiindex, then
+        follows the individual index files
+    healpix :
+        Healpix number
+    nside :
+        Healpix nside
     """
 
     def __init__(self, filenameList, healpix, nside):
-        """!Constructor
-
-        @param filenameList  List of filenames; first is the multiindex, then
-                             follows the individual index files
-        @param healpix       Healpix number
-        @param nside         Healpix nside
-        """
         if len(filenameList) < 2:
             raise RuntimeError("Insufficient filenames provided for multiindex (%s): expected >= 2" %
                                (filenameList,))
@@ -148,10 +158,14 @@ class MultiIndexCache(object):
         self._loaded = False
 
     def isWithinRange(self, coord, distance):
-        """!Is the index within range of the provided coordinates?
+        """Is the index within range of the provided coordinates?
 
-        @param coord   ICRS coordinate to check (lsst.afw.geom.SpherPoint)
-        @param distance   Angular distance (lsst.afw.geom.Angle)
+        Parameters
+        ----------
+        coord :
+            ICRS coordinate to check (lsst.afw.geom.SpherPoint)
+        distance :
+            Angular distance (lsst.afw.geom.Angle)
         """
         return (self._healpix == -1 or healpixDistance(self._healpix, self._nside, coord) <= distance)
 
@@ -172,6 +186,13 @@ class AstrometryNetCatalog(object):
 
     Behaves like a list of MultiIndexCache (or multiindex_t).
 
+    Parameters
+    ----------
+    andConfig :
+        Configuration (an AstrometryNetDataConfig)
+
+    Notes
+    -----
     These should usually be constructed using the 'fromEnvironment'
     class method, which wraps the 'fromIndexFiles' and 'fromCache'
     alternative class methods.
@@ -179,10 +200,6 @@ class AstrometryNetCatalog(object):
     _cacheFilename = "andCache.fits"
 
     def __init__(self, andConfig):
-        """!Constructor
-
-        @param andConfig   Configuration (an AstrometryNetDataConfig)
-        """
         self.config = andConfig
         cacheName = getIndexPath(self._cacheFilename)
         if self.config.allowCache and os.path.exists(cacheName):
@@ -198,6 +215,8 @@ class AstrometryNetCatalog(object):
     def writeCache(self):
         """Write a cache file
 
+        Notes
+        -----
         The cache file is a FITS file with all the required information to
         build the AstrometryNetCatalog quickly.  The first table extension
         contains a row for each multiindex, storing the healpix and nside

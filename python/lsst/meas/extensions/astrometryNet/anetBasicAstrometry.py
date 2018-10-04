@@ -53,9 +53,15 @@ class InitialAstrometry(object):
     """
     Object returned by Astrometry.determineWcs
 
-    getWcs(): sipWcs or tanWcs
-    getMatches(): sipMatches or tanMatches
+    Parameters
+    ----------
+    getWcs:
+        sipWcs or tanWcs
+    getMatches:
+        sipMatches or tanMatches
 
+    Notes
+    -----
     Other fields are:
     solveQa (PropertyList)
     tanWcs (Wcs)
@@ -221,8 +227,10 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
 
 
 class ANetBasicAstrometryTask(pipeBase.Task):
-    """!Basic implemeentation of the astrometry.net astrometrical fitter
+    """Basic implemeentation of the astrometry.net astrometrical fitter
 
+    Notes
+    -----
     A higher-level class ANetAstrometryTask takes care of dealing with the fact
     that the initial WCS is probably only a pure TAN SIP, yet we may have
     significant distortion and a good estimate for that distortion.
@@ -299,17 +307,33 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def _getImageParams(self, exposure=None, bbox=None, wcs=None, filterName=None, wcsRequired=True):
         """Get image parameters
 
-        @param[in] exposure  exposure (an afwImage.Exposure) or None
-        @param[in] bbox  bounding box (an afwGeom.Box2I) or None; if None then bbox must be specified
-        @param[in] wcs  WCS (an afwImage.Wcs) or None; if None then exposure must be specified
-        @param[in] filterName  filter name, a string, or None; if None exposure must be specified
-        @param[in] wcsRequired  if True then either wcs must be specified or exposure must contain a wcs;
+        Parameters
+        ----------
+        exposure :
+            exposure (an afwImage.Exposure) or None
+        bbox :
+            bounding box (an afwGeom.Box2I) or None; if None then bbox must be specified
+        wcs :
+            WCS (an afwImage.Wcs) or None; if None then exposure must be specified
+        filterName :
+            filter name, a string, or None; if None exposure must be specified
+        wcsRequired :
+            if True then either wcs must be specified or exposure must contain a wcs;
             if False then the returned wcs may be None
-        @return these items:
-        - bbox  bounding box; guaranteed to be set
-        - wcs  WCS if known, else None
-        - filterName filter name if known, else None
-        @throw RuntimeError if bbox cannot be determined, or wcs cannot be determined and wcsRequired True
+
+        Returns
+        -------
+        bbox :
+            bounding box; guaranteed to be set
+        wcs :
+            WCS if known, else None
+        filterName :
+            filter name if known, else None
+
+        Raises
+        ------
+        RuntimeError
+            if bbox cannot be determined, or wcs cannot be determined and wcsRequired True
         """
         if exposure is not None:
             if bbox is None:
@@ -328,7 +352,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         return bbox, wcs, filterName
 
     def useKnownWcs(self, sourceCat, wcs=None, exposure=None, filterName=None, bbox=None, calculateSip=None):
-        """!Return an InitialAstrometry object, just like determineWcs,
+        """Return an InitialAstrometry object, just like determineWcs,
         but assuming the given input WCS is correct.
 
         This involves searching for reference sources within the WCS
@@ -336,16 +360,26 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         'calculateSip' is set, we will try to compute a TAN-SIP
         distortion correction.
 
-        @param[in] sourceCat  list of detected sources in this image.
-        @param[in] wcs  your known WCS, or None to get from exposure
-        @param[in] exposure  the exposure holding metadata for this image;
+        Parameters
+        ----------
+        sourceCat :
+            list of detected sources in this image.
+        wcs :
+            your known WCS, or None to get from exposure
+        exposure :
+            the exposure holding metadata for this image;
             if None then you must specify wcs, filterName and bbox
-        @param[in] filterName  string, filter name, eg "i", or None to get from exposure`
-        @param[in] bbox  bounding box of image, or None to get from exposure
-        @param[in] calculateSip  calculate SIP distortion terms for the WCS? If None
+        filterName :
+            string, filter name, eg "i", or None to get from exposure`
+        bbox :
+            bounding box of image, or None to get from exposure
+        calculateSip :
+            calculate SIP distortion terms for the WCS? If None
             then use self.config.calculateSip. To disable WCS fitting set calculateSip=False
 
-        @note this function is also called by 'determineWcs' (via 'determineWcs2'), since the steps are all
+        Notes
+        -----
+        this function is also called by 'determineWcs' (via 'determineWcs2'), since the steps are all
         the same.
         """
         # return value:
@@ -411,45 +445,47 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         """Find a WCS solution for the given 'sourceCat' in the given
         'exposure', getting other parameters from config.
 
-        Valid kwargs include:
+        Parameters
+        ----------
+        \*\*kwargs:
 
-        'radecCenter', an afw.geom.SpherePoint giving the ICRS RA,Dec position
-           of the center of the field.  This is used to limit the
-           search done by Astrometry.net (to make it faster and load
-           fewer index files, thereby using less memory).  Defaults to
-           the RA,Dec center from the exposure's WCS; turn that off
-           with the boolean kwarg 'useRaDecCenter' or config option
-           'useWcsRaDecCenter'
+            - ``radecCenter`` : an afw.geom.SpherePoint giving the ICRS RA,Dec position
+            of the center of the field.  This is used to limit the
+            search done by Astrometry.net (to make it faster and load
+            fewer index files, thereby using less memory).  Defaults to
+            the RA,Dec center from the exposure's WCS; turn that off
+            with the boolean kwarg 'useRaDecCenter' or config option
+            'useWcsRaDecCenter'
 
-        'useRaDecCenter', a boolean.  Don't use the RA,Dec center from
-           the exposure's initial WCS.
+            - ``useRaDecCenter`` : a boolean.  Don't use the RA,Dec center from
+            the exposure's initial WCS.
 
-        'searchRadius', in degrees, to search for a solution around
-           the given 'radecCenter'; default from config option
-           'raDecSearchRadius'.
+            - ``searchRadius`` :in degrees, to search for a solution around
+            the given 'radecCenter'; default from config option
+            'raDecSearchRadius'.
 
-        'useParity': parity is the 'flip' of the image.  Knowing it
-           reduces the search space (hence time) for Astrometry.net.
-           The parity can be computed from the exposure's WCS (the
-           sign of the determinant of the CD matrix); this option
-           controls whether we do that or force Astrometry.net to
-           search both parities.  Default from config.useWcsParity.
+            - ``useParity `` : parity is the 'flip' of the image.  Knowing it
+            reduces the search space (hence time) for Astrometry.net.
+            The parity can be computed from the exposure's WCS (the
+            sign of the determinant of the CD matrix); this option
+            controls whether we do that or force Astrometry.net to
+            search both parities.  Default from config.useWcsParity.
 
-        'pixelScale': afwGeom.Angle, estimate of the angle-per-pixel
-           (ie, arcseconds per pixel).  Defaults to a value derived
-           from the exposure's WCS.  If enabled, this value, plus or
-           minus config.pixelScaleUncertainty, will be used to limit
-           Astrometry.net's search.
+            - ``pixelScale `` : afwGeom.Angle, estimate of the angle-per-pixel
+            (ie, arcseconds per pixel).  Defaults to a value derived
+            from the exposure's WCS.  If enabled, this value, plus or
+            minus config.pixelScaleUncertainty, will be used to limit
+            Astrometry.net's search.
 
-        'usePixelScale': boolean.  Use the pixel scale to limit
-           Astrometry.net's search?  Defaults to config.useWcsPixelScale.
+            - ``usePixelScale`` : boolean.  Use the pixel scale to limit
+            Astrometry.net's search?  Defaults to config.useWcsPixelScale.
 
-        'filterName', a string, the filter name of this image.  Will
-           be mapped through the 'filterMap' config dictionary to a
-           column name in the astrometry_net_data index FITS files.
-           Defaults to the exposure.getFilter() value.
+            - ``filterName`` : a string, the filter name of this image.  Will
+            be mapped through the 'filterMap' config dictionary to a
+            column name in the astrometry_net_data index FITS files.
+            Defaults to the exposure.getFilter() value.
 
-        'bbox', bounding box of exposure; defaults to exposure.getBBox()
+            - ``bbox`` : bounding box of exposure; defaults to exposure.getBBox()
 
         """
         assert(exposure is not None)
@@ -469,6 +505,18 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def determineWcs2(self, sourceCat, **kwargs):
         """Get a blind astrometric solution for the given catalog of sources.
 
+        Parameters
+        ----------
+
+        filterName : string
+        imageSize : (W,H) integer tuple/iterable
+        pixelScale :
+            afwGeom::Angle per pixel.
+        radecCenter :
+            afwCoord::Coord
+
+        Notes
+        -----
         We need:
           -the image size;
           -the filter
@@ -480,11 +528,6 @@ class ANetBasicAstrometryTask(pipeBase.Task):
              --> "parity"
 
         (all of which are metadata of Exposure).
-
-        filterName: string
-        imageSize: (W,H) integer tuple/iterable
-        pixelScale: afwGeom::Angle per pixel.
-        radecCenter: afwCoord::Coord
         """
         wcs, qa = self.getBlindWcsSolution(sourceCat, **kwargs)
         kw = {}
@@ -588,13 +631,19 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         It uses your WCS to compute a fake grid of corresponding "stars" in pixel and sky coords,
         and feeds that to the regular SIP code.
 
-        @param[in] wcs  initial WCS
-        @param[in] bbox  bounding box of image
-        @param[in] ngrid  number of grid points along x and y for fitting (fit at ngrid^2 points)
-        @param[in] linearizeAtCenter  if True, get a linear approximation of the input
-          WCS at the image center and use that as the TAN initialization for
-          the TAN-SIP solution.  You probably want this if your WCS has its
-          CRPIX outside the image bounding box.
+        Parameters
+        ----------
+        wcs :
+            initial WCS
+        bbox :
+            bounding box of image
+        ngrid :
+            number of grid points along x and y for fitting (fit at ngrid^2 points)
+        linearizeAtCenter :
+            if True, get a linear approximation of the input
+            WCS at the image center and use that as the TAN initialization for
+            the TAN-SIP solution.  You probably want this if your WCS has its
+            CRPIX outside the image bounding box.
         """
         # Ugh, build src and ref tables
         srcSchema = afwTable.SourceTable.makeMinimalSchema()
@@ -636,16 +685,24 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def getSipWcsFromCorrespondences(self, origWcs, refCat, sourceCat, bbox):
         """Produce a SIP solution given a list of known correspondences.
 
+        Parameters
+        ----------
+        origWcs :
+            the WCS to linearize in order to get the TAN part of the TAN-SIP WCS.
+        refCat :
+            reference source catalog
+        sourceCat :
+            source catalog
+        bbox :
+            bounding box of image
+
+        Notes
+        -----
         Unlike _calculateSipTerms, this does not iterate the solution;
         it assumes you have given it a good sets of corresponding stars.
 
-        NOTE that "refCat" and "sourceCat" are assumed to be the same length;
+        note that "refCat" and "sourceCat" are assumed to be the same length;
         entries "refCat[i]" and "sourceCat[i]" are assumed to be correspondences.
-
-        @param[in] origWcs  the WCS to linearize in order to get the TAN part of the TAN-SIP WCS.
-        @param[in] refCat  reference source catalog
-        @param[in] sourceCat  source catalog
-        @param[in] bbox  bounding box of image
         """
         sipOrder = self.config.sipOrder
         matches = []
@@ -656,16 +713,23 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         return sipObject.getNewWcs()
 
     def _calculateSipTerms(self, origWcs, refCat, sourceCat, matches, bbox):
-        """!Iteratively calculate SIP distortions and regenerate matches based on improved WCS.
+        """Iteratively calculate SIP distortions and regenerate matches based on improved WCS.
 
-        @param[in] origWcs  original WCS object, probably (but not necessarily) a TAN WCS;
-           this is used to set the baseline when determining whether a SIP
-           solution is any better; it will be returned if no better SIP solution
-           can be found.
-        @param[in] refCat  reference source catalog
-        @param[in] sourceCat  sources in the image to be solved
-        @param[in] matches  list of supposedly matched sources, using the "origWcs".
-        @param[in] bbox  bounding box of image, which is used when finding reverse SIP coefficients.
+        Parameters
+        ----------
+        origWcs :
+            original WCS object, probably (but not necessarily) a TAN WCS;
+            this is used to set the baseline when determining whether a SIP
+            solution is any better; it will be returned if no better SIP solution
+            can be found.
+        refCat :
+            reference source catalog
+        sourceCat :
+            sources in the image to be solved
+        matches :
+            list of supposedly matched sources, using the "origWcs".
+        bbox :
+            bounding box of image, which is used when finding reverse SIP coefficients.
         """
         sipOrder = self.config.sipOrder
         wcs = origWcs
@@ -719,9 +783,14 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def plotSolution(self, matches, wcs, imageSize):
         """Plot the solution, when debugging is turned on.
 
-        @param matches   The list of matches
-        @param wcs         The Wcs
-        @param imageSize   2-tuple with the image size (W,H)
+        Parameters
+        ----------
+        matches :
+            The list of matches
+        wcs :
+            The Wcs
+        imageSize :
+            2-tuple with the image size (W,H)
         """
         import lsstDebug
         display = lsstDebug.Info(__name__).display
@@ -797,15 +866,24 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def _computeMatchStatsOnSky(self, wcs, matchList):
         """Compute on-sky radial distance statistics for a match list
 
-        @param[in] wcs  WCS for match list; an lsst.afw.image.Wcs
-        @param[in] matchList  list of matches between reference object and sources;
+        Parameters
+        ----------
+        wcs :
+            WCS for match list; an lsst.afw.image.Wcs
+        matchList :
+            list of matches between reference object and sources;
             a list of lsst.afw.table.ReferenceMatch;
             the source centroid and reference object coord are read
 
-        @return a pipe_base Struct containing these fields:
-        - distMean  clipped mean of on-sky radial separation
-        - distStdDev  clipped standard deviation of on-sky radial separation
-        - maxMatchDist  distMean + self.config.matchDistanceSigma*distStdDev
+        Returns
+        -------
+        result : `pipe_base Struct`
+            containing these fields:
+
+            - ``distMean`` :  clipped mean of on-sky radial separation
+            - ``distStdDev`` :  clipped standard deviation of on-sky radial separation
+            - ``maxMatchDist`` :  distMean + self.config.matchDistanceSigma*distStdDev
+
         """
         distStatsInRadians = makeMatchStatisticsInRadians(wcs, matchList,
                                                           afwMath.MEANCLIP | afwMath.STDEVCLIP)
@@ -853,9 +931,14 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         Returns the column name in the astrometry_net_data index file that will be used
         for the given filter name.
 
-        @param filterName   Name of filter used in exposure
-        @param columnMap    Dict that maps filter names to column names
-        @param default      Default column name
+        Parameters
+        ----------
+        filterName :
+            Name of filter used in exposure
+        columnMap :
+            Dict that maps filter names to column names
+        default :
+                Default column name
         """
         filterName = self.config.filterMap.get(filterName, filterName)  # Exposure filter --> desired filter
         try:
@@ -867,7 +950,8 @@ class ANetBasicAstrometryTask(pipeBase.Task):
 
     def _solve(self, sourceCat, wcs, bbox, pixelScale, radecCenter, searchRadius, parity, filterName=None):
         """
-        @param[in] parity  True for flipped parity, False for normal parity, None to leave parity unchanged
+        parity :
+            True for flipped parity, False for normal parity, None to leave parity unchanged
         """
         solver = self.refObjLoader._getSolver()
 
@@ -984,12 +1068,19 @@ class ANetBasicAstrometryTask(pipeBase.Task):
     def _trimBadPoints(sourceCat, bbox, wcs=None):
         """Remove elements from catalog whose xy positions are not within the given bbox.
 
-        sourceCat:  a Catalog of SimpleRecord or SourceRecord objects
-        bbox: an afwImage.Box2D
-        wcs:  if not None, will be used to compute the xy positions on-the-fly;
-              this is required when sources actually contains SimpleRecords.
+        Parameters
+        ----------
+        sourceCat :
+            a Catalog of SimpleRecord or SourceRecord objects
+        bbox :
+            an afwImage.Box2D
+        wcs :
+            if not None, will be used to compute the xy positions on-the-fly;
+            this is required when sources actually contains SimpleRecords.
 
-        Returns:
+        Returns
+        -------
+        result :
         a list of Source objects with xAstrom, yAstrom within the bbox.
         """
         keep = type(sourceCat)(sourceCat.table)
@@ -1004,9 +1095,17 @@ def _createMetadata(bbox, wcs, filterName):
     """
     Create match metadata entries required for regenerating the catalog
 
-    @param bbox  bounding box of image (pixels)
-    @param filterName Name of filter, used for magnitudes
-    @return Metadata
+    Parameters
+    ----------
+    bbox :
+        bounding box of image (pixels)
+    filterName :
+        Name of filter, used for magnitudes
+
+    Returns
+    -------
+    meta :
+        return Metadata
     """
     meta = dafBase.PropertyList()
 

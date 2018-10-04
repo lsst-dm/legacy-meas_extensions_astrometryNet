@@ -64,14 +64,22 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
     ConfigClass = LoadAstrometryNetObjectsConfig
 
     def __init__(self, config=None, andConfig=None, **kwargs):
-        """!Create a LoadAstrometryNetObjectsTask
+        """Create a LoadAstrometryNetObjectsTask
 
-        @param[in] config  configuration (an instance of self.ConfigClass); if None use self.ConfigClass()
-        @param[in] andConfig  astrometry.net data config (an instance of AstromNetDataConfig, or None);
+        Parameters
+        ----------
+        config :
+            configuration (an instance of self.ConfigClass); if None use self.ConfigClass()
+        andConfig :
+            astrometry.net data config (an instance of AstromNetDataConfig, or None);
             if None then use andConfig.py in the astrometry_net_data product (which must be setup)
-        @param[in] kwargs  additional keyword arguments for pipe_base Task.\_\_init\_\_
+        kwargs :
+            additional keyword arguments for pipe_base Task.\_\_init\_\_
 
-        @throw RuntimeError if andConfig is None and the configuration cannot be found,
+        Raises
+        ------
+        RuntimeError
+            if andConfig is None and the configuration cannot be found,
             either because astrometry_net_data is not setup in eups
             or because the setup version does not include the file "andConfig.py"
         """
@@ -82,27 +90,40 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
 
     @pipeBase.timeMethod
     def loadSkyCircle(self, ctrCoord, radius, filterName=None, epoch=None):
-        """!Load reference objects that overlap a circular sky region
+        """Load reference objects that overlap a circular sky region
 
-        @param[in] ctrCoord  center of search region (an afwGeom.Coord)
-        @param[in] radius  radius of search region (an afwGeom.Angle)
-        @param[in] filterName  name of filter, or None for the default filter;
+        Parameters
+        ----------
+        ctrCoord :
+            center of search region (an afwGeom.Coord)
+        radius :
+            radius of search region (an afwGeom.Angle)
+        filterName :
+            name of filter, or None for the default filter;
             used for flux values in case we have flux limits (which are not yet implemented)
-        @param[in] epoch  Epoch for proper motion and parallax correction
-                    (an astropy.time.Time), or None
+        epoch :
+            Epoch for proper motion and parallax correction
+            (an astropy.time.Time), or None
 
+        Notes
+        -----
         No proper motion correction is made, since our astrometry.net catalogs
         typically don't support that, and even if they do they format is uncertain.
         Users interested in proper motion corrections should use the
         lsst.meas.algorithms.LoadIndexedReferenceObjectsTask or they will need to
         subclass and define how the proper motion correction is to be done.
 
-        @return an lsst.pipe.base.Struct containing:
-        - refCat a catalog of reference objects with the
-            \link meas_algorithms_loadReferenceObjects_Schema standard schema \endlink
-            as documented in LoadReferenceObjects, including photometric, resolved and variable;
-            hasCentroid is False for all objects.
-        - fluxField = name of flux field for specified filterName
+        Returns
+        -------
+        result : `lsst.pipe.base.Struct`
+            containing:
+
+            - ``refCat`` : a catalog of reference objects with the
+                meas_algorithms_loadReferenceObjects_Schema standard schema \endlink
+                as documented in LoadReferenceObjects, including photometric, resolved and variable;
+                hasCentroid is False for all objects.
+            - ``fluxField`` : name of flux field for specified filterName
+
         """
         self._readIndexFiles()
 
@@ -162,7 +183,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
 
     @pipeBase.timeMethod
     def _readIndexFiles(self):
-        """!Read all astrometry.net index files, if not already read
+        """Read all astrometry.net index files, if not already read
         """
         if self.haveIndexFiles:
             return
@@ -176,12 +197,19 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         self.multiInds = AstrometryNetCatalog(self.andConfig)
 
     def _getMIndexesWithinRange(self, ctrCoord, radius):
-        """!Get list of muti-index objects within range
+        """Get list of muti-index objects within range
 
-        @param[in] ctrCoord  center of search region (an afwGeom.Coord)
-        @param[in] radius  radius of search region (an afwGeom.Angle)
+        Parameters
+        ----------
+        ctrCoord :
+            center of search region (an afwGeom.Coord)
+        radius :
+            radius of search region (an afwGeom.Angle)
 
-        @return list of multiindex objects
+        Returns
+        -------
+        result :
+            list of multiindex objects
         """
         return [mi for mi in self.multiInds if mi.isWithinRange(ctrCoord, radius)]
 

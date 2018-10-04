@@ -1,8 +1,8 @@
-'''
+"""
 We used to have AstrometryNetDataConfig() use the pex_config
 mechanism, but we need nested lists, so we do this home-brew version
 instead.
-'''
+"""
 from __future__ import absolute_import, division, print_function
 
 __all__ = ["AstrometryNetDataConfig"]
@@ -11,9 +11,9 @@ from builtins import object
 
 
 def _checkMagMap(magmap):
-    '''
+    """
     Checks the validity of a magnitude column map in AstrometryNetDataConfig.
-    '''
+    """
     if not isinstance(magmap, dict):
         raise RuntimeError('Mag maps must be dicts')
     for k, v in magmap.items():
@@ -27,9 +27,9 @@ def _checkMagMap(magmap):
 
 
 def _checkIndexList(indexList):
-    '''
+    """
     Checks the validity of an index list in AstrometryNetDataConfig.
-    '''
+    """
     if not isinstance(indexList, list):
         raise RuntimeError('indexList config item must be a list')
     for k in indexList:
@@ -40,9 +40,9 @@ def _checkIndexList(indexList):
 
 
 def _checkMultiIndexList(multiIndexList):
-    '''
+    """
     Checks the validity of a multi_index list in AstrometryNetDataConfig.
-    '''
+    """
     if not isinstance(multiIndexList, list):
         raise RuntimeError('multiIndexList config item must be a list')
     for k in multiIndexList:
@@ -59,13 +59,13 @@ def _checkMultiIndexList(multiIndexList):
 
 
 class AstrometryNetDataConfig(object):
-    '''
+    """
     Astrometry.net data config object.  This is a plain-python config
     structure similar to pexConfig.
 
     For examples of use, see tests/astrometry_net_data/photocal/andConfig*.py
 
-    '''
+    """
     fields = [
         ('idColumn', str, 'id', None,
          'Column name (in the index files) of the ID number of reference sources'),
