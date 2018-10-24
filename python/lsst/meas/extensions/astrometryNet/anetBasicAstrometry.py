@@ -150,15 +150,15 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
         default=True,
     )
     raDecSearchRadius = RangeField(
-        doc="When useWcsRaDecCenter=True, this is the radius, in degrees, around the RA,Dec center " +
-        "specified in the input exposure\'s WCS to search for a solution.",
+        doc="When useWcsRaDecCenter=True, this is the radius, in degrees, around the RA,Dec center "
+        r"specified in the input exposure\'s WCS to search for a solution.",
         dtype=float,
         default=1.0,
         min=0.0,
     )
     pixelScaleUncertainty = RangeField(
-        doc="Range of pixel scales, around the value in the WCS header, to search. " +
-        "If the value of this field is X and the nominal scale is S, " +
+        doc="Range of pixel scales, around the value in the WCS header, to search. "
+        "If the value of this field is X and the nominal scale is S, "
         "the range searched will be  S/X to S*X",
         dtype=float,
         default=1.1,
@@ -203,7 +203,7 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
         default=True,
     )
     maxIter = RangeField(
-        doc="maximum number of iterations of match sources and fit WCS" +
+        doc="maximum number of iterations of match sources and fit WCS"
         "ignored if not fitting a WCS",
         dtype=int,
         default=5,
@@ -211,8 +211,8 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
     )
     matchDistanceSigma = RangeField(
         doc="The match and fit loop stops when maxMatchDist minimized: "
-        " maxMatchDist = meanMatchDist + matchDistanceSigma*stdDevMatchDistance " +
-        " (where the mean and std dev are computed using outlier rejection);" +
+        " maxMatchDist = meanMatchDist + matchDistanceSigma*stdDevMatchDistance "
+        " (where the mean and std dev are computed using outlier rejection);"
             " ignored if not fitting a WCS",
         dtype=float,
         default=2,
@@ -258,7 +258,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                  config,
                  andConfig=None,
                  **kwargs):
-        """!Construct an ANetBasicAstrometryTask
+        r"""!Construct an ANetBasicAstrometryTask
 
         @param[in] config  configuration (an instance of self.ConfigClass)
         @param[in] andConfig  astrometry.net data config (an instance of AstromNetDataConfig, or None);
@@ -374,7 +374,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         matches = self._getMatchList(sourceCat, refCat, wcs)
         uniq = set([sm.second.getId() for sm in matches])
         if len(matches) != len(uniq):
-            self.log.warn('The list of matched stars contains duplicate reference source IDs ' +
+            self.log.warn('The list of matched stars contains duplicate reference source IDs '
                           '(%i sources, %i unique ids)', len(matches), len(uniq))
         if len(matches) == 0:
             self.log.warn('No matches found between input sources and reference catalogue.')
@@ -537,7 +537,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             if radecCenter is None:
                 if useRaDecCenter:
                     radecCenter = wcs.pixelToSky(xc, yc)
-                    self.log.debug('Setting RA,Dec center estimate = (%.3f, %.3f) from given WCS ' +
+                    self.log.debug('Setting RA,Dec center estimate = (%.3f, %.3f) from given WCS '
                                    'estimate, using pixel center = (%.1f, %.1f)',
                                    radecCenter.getLongitude().asDegrees(),
                                    radecCenter.getLatitude().asDegrees(), xc, yc)
@@ -547,7 +547,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                     assert(pixelScale is not None)
                     pixRadius = math.hypot(*bboxD.getDimensions()) / 2
                     searchRadius = (pixelScale * pixRadius * searchRadiusScale)
-                    self.log.debug('Using RA,Dec search radius = %.3f deg, from pixel scale, ' +
+                    self.log.debug('Using RA,Dec search radius = %.3f deg, from pixel scale, '
                                    'image size, and searchRadiusScale = %g',
                                    searchRadius, searchRadiusScale)
             if useParity:
