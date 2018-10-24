@@ -47,9 +47,9 @@ class ANetAstrometryConfig(pexConfig.Config):
         doc="Basic astrometry solver",
     )
     forceKnownWcs = pexConfig.Field(dtype=bool, doc=(
-        "Assume that the input image's WCS is correct, without comparing it to any external reality." +
-        " (In contrast to using Astrometry.net).  NOTE, if you set this, you probably also want to" +
-        " un-set 'solver.calculateSip'; otherwise we'll still try to find a TAN-SIP WCS starting " +
+        "Assume that the input image's WCS is correct, without comparing it to any external reality."
+        " (In contrast to using Astrometry.net).  NOTE, if you set this, you probably also want to"
+        " un-set 'solver.calculateSip'; otherwise we'll still try to find a TAN-SIP WCS starting "
         " from the existing WCS"), default=False)
     rejectThresh = pexConfig.RangeField(dtype=float, default=3.0, doc="Rejection threshold for Wcs fitting",
                                         min=0.0, inclusiveMin=False)
