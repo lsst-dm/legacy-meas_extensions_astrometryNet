@@ -151,7 +151,7 @@ class ANetBasicAstrometryConfig(LoadAstrometryNetObjectsTask.ConfigClass):
     )
     raDecSearchRadius = RangeField(
         doc="When useWcsRaDecCenter=True, this is the radius, in degrees, around the RA,Dec center "
-        "specified in the input exposure\'s WCS to search for a solution.",
+        r"specified in the input exposure\'s WCS to search for a solution.",
         dtype=float,
         default=1.0,
         min=0.0,
@@ -258,7 +258,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
                  config,
                  andConfig=None,
                  **kwargs):
-        """!Construct an ANetBasicAstrometryTask
+        r"""!Construct an ANetBasicAstrometryTask
 
         @param[in] config  configuration (an instance of self.ConfigClass)
         @param[in] andConfig  astrometry.net data config (an instance of AstromNetDataConfig, or None);

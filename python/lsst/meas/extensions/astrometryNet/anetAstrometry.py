@@ -70,7 +70,7 @@ class ANetAstrometryConfig(pexConfig.Config):
 
 
 class ANetAstrometryTask(pipeBase.Task):
-    """!Use astrometry.net to match input sources with a reference catalog and solve for the Wcs
+    r"""!Use astrometry.net to match input sources with a reference catalog and solve for the Wcs
 
     @anchor ANetAstrometryTask_
 
@@ -143,7 +143,7 @@ class ANetAstrometryTask(pipeBase.Task):
     _DefaultName = "astrometricSolver"
 
     def __init__(self, schema, refObjLoader=None, **kwds):
-        """!Create the astrometric calibration task.  Most arguments are simply passed onto pipe.base.Task.
+        r"""!Create the astrometric calibration task.  Most arguments are simply passed onto pipe.base.Task.
 
         \param schema An lsst::afw::table::Schema used to create the output lsst.afw.table.SourceCatalog
         \param refObjLoader The AstrometryTask constructor requires a refObjLoader.  In order to make this
@@ -199,7 +199,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
     @pipeBase.timeMethod
     def solve(self, exposure, sourceCat):
-        """!Match with reference sources and calculate an astrometric solution
+        r"""!Match with reference sources and calculate an astrometric solution
 
         \param[in,out] exposure Exposure to calibrate; wcs is updated
         \param[in] sourceCat catalog of measured sources (an lsst.afw.table.SourceCatalog)
@@ -234,7 +234,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
     @pipeBase.timeMethod
     def distort(self, sourceCat, exposure):
-        """!Calculate distorted source positions
+        r"""!Calculate distorted source positions
 
         CCD images are often affected by optical distortion that makes
         the astrometric solution higher order than linear.  Unfortunately,
@@ -335,7 +335,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
     @pipeBase.timeMethod
     def _astrometry(self, sourceCat, exposure, bbox=None):
-        """!Solve astrometry to produce WCS
+        r"""!Solve astrometry to produce WCS
 
         \param[in] sourceCat Sources on exposure, an lsst.afw.table.SourceCatalog
         \param[in,out] exposure Exposure to process, an lsst.afw.image.ExposureF or D; wcs is updated
@@ -454,7 +454,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
 
 def showAstrometry(exposure, wcs, allMatches, useMatches, frame=0, title=None, pause=False):
-    """!Show results of astrometry fitting
+    r"""!Show results of astrometry fitting
 
     \param exposure Image to display
     \param wcs Astrometric solution
