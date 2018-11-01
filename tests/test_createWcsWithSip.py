@@ -40,7 +40,6 @@ class CreateWcsWithSipCase(unittest.TestCase):
         setupAstrometryNetDataDir('cfhttemplate')
 
         self.config = ANetBasicAstrometryTask.ConfigClass()
-        self.config.defaultFilter = "r"
         self.astrom = ANetBasicAstrometryTask(config=self.config)
 
         testDir = os.path.dirname(__file__)
@@ -70,7 +69,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             src.set(xKey, x + x0)
             src.set(yKey, src.get(yKey) - 500 + y0)
         bbox = afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Extent2I(1000, 1000))
-        res = self.astrom.determineWcs2(cat, bbox=bbox)
+        res = self.astrom.determineWcs2(cat, bbox=bbox, filterName='r')
         self.assertIsNotNone(res.sipWcs, "Failed to fit SIP terms")
         print('Got result', res)
 
@@ -101,7 +100,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
         cat = self.loadCatalogue(self.filename)
         img = distort.distortList(cat, distortFunc)
         bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
-        res = self.astrom.determineWcs2(img, bbox=bbox)
+        res = self.astrom.determineWcs2(img, bbox=bbox, filterName='r')
         imgWcs = res.getWcs()
 
         # Create a wcs with sip
@@ -137,7 +136,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             src.set(yKey, src.get(yKey) - 500)
 
         bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
-        res = self.astrom.determineWcs2(cat, bbox=bbox)
+        res = self.astrom.determineWcs2(cat, bbox=bbox, filterName='r')
         catWcs = res.getWcs()
 
         # Set catalogue ra and decs

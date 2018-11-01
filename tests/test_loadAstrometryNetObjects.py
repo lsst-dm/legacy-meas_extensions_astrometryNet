@@ -120,30 +120,6 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
             with self.assertRaises(KeyError):
                 schema.find(filterName + "_fluxErr")
 
-    def testRequestForeignFilter(self):
-        """The user requests a filter not in the astrometry.net catalog.
-
-        In that case, we must specify a mapping in the AstrometryConfig to point
-        to an alternative filter (e.g., g instead of B).
-        We should expect the returned catalog to contain references
-        to the filterNameList that are in the catalog.
-        """
-        filterNameList = ['u', 'g', 'r', 'i', 'z']
-        andConfig = AstrometryNetDataConfig()
-        andConfig.load(os.path.join(self.datapath, 'andConfig2.py'))
-        self.config.filterMap = dict(('my_'+b, b) for b in filterNameList)
-        loadANetObj = LoadAstrometryNetObjectsTask(config=self.config, andConfig=andConfig)
-
-        loadRes = loadANetObj.loadPixelBox(bbox=self.bbox, wcs=self.wcs, filterName="my_r")
-        refCat = loadRes.refCat
-        self.assertEqual(loadRes.fluxField, "my_r_camFlux")
-        self.assertEqual(len(refCat), self.desNumStarsInPixelBox)
-        self.assertObjInBBox(refCat=refCat, bbox=self.bbox, wcs=self.wcs)
-        schema = refCat.getSchema()
-        for filterName in filterNameList:
-            schema.find(filterName + "_flux")
-            schema.find(filterName + '_fluxErr')
-
     def testDifferentMagNames(self):
         """The astrometry.net catalog's magnitude columns are not named after filters.
 

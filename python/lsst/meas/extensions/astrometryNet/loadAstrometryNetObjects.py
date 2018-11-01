@@ -145,8 +145,6 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
             inds = tuple(mi[0] for mi in multiInds)
             refCat = solver.getCatalog(inds, *fixedArgTuple)
 
-        self._addFluxAliases(schema=refCat.schema)
-
         fluxField = getRefFluxField(schema=refCat.schema, filterName=filterName)
 
         # NOTE: sourceSelectors require contiguous catalogs, so ensure
