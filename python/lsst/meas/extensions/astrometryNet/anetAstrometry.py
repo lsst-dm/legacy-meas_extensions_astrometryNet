@@ -114,7 +114,7 @@ class ANetAstrometryTask(pipeBase.Task):
       <DD> If True call showAstrometry while iterating ANetAstrometryConfig.rejectIter times,
       and also after converging; and call displayAstrometry after applying the distortion correction.
       <DT> \c frame
-      <DD> ds9 frame to use in showAstrometry and displayAstrometry
+      <DD> display frame to use in showAstrometry and displayAstrometry
       <DT> \c pause
       <DD> Pause after showAstrometry and displayAstrometry?
     </DL>
@@ -468,13 +468,14 @@ def showAstrometry(exposure, wcs, allMatches, useMatches, frame=0, title=None, p
      - +: Detected objects
      - x: Catalogue objects
     """
-    import lsst.afw.display.ds9 as ds9
-    ds9.mtv(exposure, frame=frame, title=title)
+    import lsst.afw.display as afwDisplay
+    disp = afwDisplay.Display(frame=frame)
+    disp.mtv(exposure, title=title)
 
     useIndices = set(m.second.getId() for m in useMatches)
 
     radii = []
-    with ds9.Buffering():
+    with disp.Buffering():
         for i, m in enumerate(allMatches):
             x, y = m.second.getX(), m.second.getY()
             pix = wcs.skyToPixel(m.first.getCoord())
@@ -483,10 +484,10 @@ def showAstrometry(exposure, wcs, allMatches, useMatches, frame=0, title=None, p
             if isUsed:
                 radii.append(np.hypot(pix[0] - x, pix[1] - y))
 
-            color = ds9.YELLOW if isUsed else ds9.RED
+            color = afwDisplay.YELLOW if isUsed else afwDisplay.RED
 
-            ds9.dot("+", x, y, size=10, frame=frame, ctype=color)
-            ds9.dot("x", pix[0], pix[1], size=10, frame=frame, ctype=color)
+            disp.dot("+", x, y, size=10, ctype=color)
+            disp.dot("x", pix[0], pix[1], size=10, ctype=color)
 
     radii = np.array(radii)
     print("<dr> = %.4g +- %.4g pixels [%d/%d matches]" % (radii.mean(), radii.std(),
