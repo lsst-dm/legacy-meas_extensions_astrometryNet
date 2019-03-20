@@ -365,7 +365,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             bbox=bbox,
             wcs=wcs,
             filterName=filterName,
-            calib=None,
+            photoCalib=None,
         ).refCat
         astrom.refCat = refCat
         catids = [src.getId() for src in refCat]
