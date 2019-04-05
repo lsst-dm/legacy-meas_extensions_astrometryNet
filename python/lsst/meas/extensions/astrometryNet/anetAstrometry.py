@@ -180,7 +180,7 @@ class ANetAstrometryTask(pipeBase.Task):
         @param[in,out] exposure  exposure whose WCS is to be fit
             The following are read only:
             - bbox
-            - calib (may be absent)
+            - photoCalib (may be absent)
             - filter (may be unset)
             - detector (if wcs is pure tangent; may be absent)
             The following are updated:
