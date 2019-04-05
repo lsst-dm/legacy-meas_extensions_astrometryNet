@@ -6,6 +6,7 @@ from builtins import object
 
 import lsst.pipe.base as pipeBase
 from lsst.meas.algorithms import LoadReferenceObjectsTask, getRefFluxField
+from lsst.meas.algorithms.loadReferenceObjects import convertToNanojansky
 from . import astrometry_net
 from .multiindex import AstrometryNetCatalog, getConfigFromEnvironment
 
@@ -153,6 +154,12 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         # contiguity now, so views are preserved from here on.
         if not refCat.isContiguous():
             refCat = refCat.copy(deep=True)
+
+        # Update flux fields to be nJy. a.net catalogs do not have a conversion script.
+        self.log.warn("Loading A.net reference catalog with old style units in schema.")
+        self.log.warn("A.net reference catalogs will not be supported in the future.")
+        self.log.warn("See RFC-562 and RFC-575 for more details.")
+        refCat = convertToNanojansky(refCat, self.log)
 
         self.log.debug("found %d objects", len(refCat))
         return pipeBase.Struct(
