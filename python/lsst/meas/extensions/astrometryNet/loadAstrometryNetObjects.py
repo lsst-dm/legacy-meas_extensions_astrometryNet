@@ -82,7 +82,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         # because astrometry may not be used, in which case it may not be properly configured
 
     @pipeBase.timeMethod
-    def loadSkyCircle(self, ctrCoord, radius, filterName=None, epoch=None):
+    def loadSkyCircle(self, ctrCoord, radius, filterName=None, epoch=None, centroids=True):
         """!Load reference objects that overlap a circular sky region
 
         @param[in] ctrCoord  center of search region (an afwGeom.Coord)
@@ -91,6 +91,8 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
             used for flux values in case we have flux limits (which are not yet implemented)
         @param[in] epoch  Epoch for proper motion and parallax correction
                     (an astropy.time.Time), or None
+        centroids : `bool` (optional)
+            Ignored: a.net refcats always have centroid fields.
 
         No proper motion correction is made, since our astrometry.net catalogs
         typically don't support that, and even if they do they format is uncertain.
