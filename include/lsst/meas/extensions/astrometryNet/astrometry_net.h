@@ -37,6 +37,7 @@ extern "C" {
 #include "lsst/daf/base/PropertyList.h"
 #include "lsst/afw/table.h"
 #include "lsst/afw/geom.h"
+#include "lsst/geom.h"
 
 namespace lsst {
 namespace meas {
@@ -100,7 +101,7 @@ public:
     void reload();
 
 private:
-    
+
     struct _Deleter {
         void operator()(multiindex_t* m) {
             multiindex_free(m);
@@ -140,8 +141,8 @@ public:
 
     Returned schema:
     - id
-    - coord: ICRS sky position (an lsst::afw::geom::SpherePoint)
-    - centroid: centroid on some exposure, if relevant (an lsst::afw::geom::Point2D);
+    - coord: ICRS sky position (an lsst::geom::SpherePoint)
+    - centroid: centroid on some exposure, if relevant (an lsst::geom::Point2D);
         returned value is not set
     - hasCentroid: if true then centroid has been set; returned value is false
     - *filterName*_flux: flux in the specified filter (double)
@@ -153,8 +154,8 @@ public:
     */
     lsst::afw::table::SimpleCatalog getCatalog(
         std::vector<index_t*> inds,
-        lsst::afw::geom::SpherePoint const &ctrCoord,
-        lsst::afw::geom::Angle const &radius,
+        lsst::geom::SpherePoint const &ctrCoord,
+        lsst::geom::Angle const &radius,
         const char* idCol,
         std::vector<std::string> const& filterNameList,
         std::vector<std::string> const& magColList,
@@ -231,6 +232,6 @@ private:
  *
  * Note that this assumes that the astrometry.net catalog reference system is ICRS.
  */
-lsst::afw::geom::Angle healpixDistance(int hp, int nside, lsst::afw::geom::SpherePoint const& coord);
+lsst::geom::Angle healpixDistance(int hp, int nside, lsst::geom::SpherePoint const& coord);
 
 }}}}  // namespace lsst::meas::extensions::astrometryNet

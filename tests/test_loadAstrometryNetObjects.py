@@ -30,6 +30,7 @@ import lsst.utils.tests
 from lsst.daf.base import PropertySet
 import lsst.afw.geom as afwGeom
 from lsst.afw.table import CoordKey, Point2DKey
+import lsst.geom as geom
 from lsst.meas.extensions.astrometryNet import LoadAstrometryNetObjectsTask, \
     AstrometryNetDataConfig
 from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
@@ -45,8 +46,8 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         self.config = LoadAstrometryNetObjectsTask.ConfigClass()
         self.config.pixelMargin = 50  # Original default when these tests were written
 
-        self.bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(3001, 3001))
-        self.ctrPix = afwGeom.Point2I(1500, 1500)
+        self.bbox = geom.Box2I(geom.Point2I(0, 0), geom.Extent2I(3001, 3001))
+        self.ctrPix = geom.Point2I(1500, 1500)
         metadata = PropertySet()
         metadata.set("RADESYS", "FK5")
         metadata.set("EQUINOX", 2000.0)
@@ -95,8 +96,8 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
     def testLoadSkyCircle(self):
         loadANetObj = LoadAstrometryNetObjectsTask(config=self.config)
 
-        ctrCoord = self.wcs.pixelToSky(afwGeom.Point2D(self.ctrPix))
-        radius = ctrCoord.separation(self.wcs.pixelToSky(afwGeom.Box2D(self.bbox).getMin()))
+        ctrCoord = self.wcs.pixelToSky(geom.Point2D(self.ctrPix))
+        radius = ctrCoord.separation(self.wcs.pixelToSky(geom.Box2D(self.bbox).getMin()))
 
         loadRes = loadANetObj.loadSkyCircle(ctrCoord=ctrCoord, radius=radius, filterName="r")
         self.assertEqual(len(loadRes.refCat), self.desNumStarsInSkyCircle)
@@ -174,11 +175,11 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
 
         @param[in] refCat  reference object catalog, an lsst.afw.table.SimpleCatalog or compatible;
             the only fields read are "centroid_x/y" and "coord_ra/dec"
-        @param[in] bbox  pixel bounding box coordinates, an lsst.afw.geom.Box2I or Box2D;
+        @param[in] bbox  pixel bounding box coordinates, an lsst.geom.Box2I or Box2D;
             the supplied box is grown by self.config.pixelMargin before testing the stars
         @param[in] wcs  WCS, an lsst.afw.image.Wcs
         """
-        bbox = afwGeom.Box2D(bbox)
+        bbox = geom.Box2D(bbox)
         bbox.grow(self.config.pixelMargin)
         centroidKey = Point2DKey(refCat.schema["centroid"])
         coordKey = CoordKey(refCat.schema["coord"])
@@ -194,7 +195,7 @@ class TestLoadAstrometryNetObjects(unittest.TestCase):
         """
         import matplotlib.pyplot as plt
         if bbox is not None:
-            cornerList = list(afwGeom.Box2D(bbox).getCorners())
+            cornerList = list(geom.Box2D(bbox).getCorners())
             cornerList.append(cornerList[0])  # show 4 sides of the box by going back to the beginning
             xc, yc = list(zip(*cornerList))
             plt.plot(xc, yc, '-')

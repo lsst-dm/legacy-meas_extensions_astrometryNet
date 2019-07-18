@@ -28,7 +28,7 @@ from lsst.log import Log
 from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryConfig, \
     AstrometryNetDataConfig, ANetBasicAstrometryTask
 import lsst.utils.tests
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 from test_findAstrometryNetDataDir import setupAstrometryNetDataDir
 
 
@@ -50,10 +50,10 @@ class MultipleCatalogStarsTest(unittest.TestCase):
         astrom = ANetBasicAstrometryTask(self.conf, andConfig=self.andConfig)
         astrom.log.setLevel(logLevel)
 
-        ctrCoord = afwGeom.SpherePoint(215.6, 53.0, afwGeom.degrees)
+        ctrCoord = geom.SpherePoint(215.6, 53.0, geom.degrees)
         cat = astrom.refObjLoader.loadSkyCircle(
             ctrCoord=ctrCoord,
-            radius=0.1 * afwGeom.degrees,
+            radius=0.1 * geom.degrees,
             filterName='z',
         ).refCat
         print('Got', len(cat), 'reference sources')
