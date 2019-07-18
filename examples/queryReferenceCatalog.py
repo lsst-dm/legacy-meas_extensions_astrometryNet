@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import zip
 import sys
 
 import lsst.pex.policy as policy

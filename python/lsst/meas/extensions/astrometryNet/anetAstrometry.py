@@ -19,13 +19,7 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["ANetAstrometryConfig", "ANetAstrometryTask", "showAstrometry"]
-
-from builtins import input
-from builtins import zip
-from builtins import range
 
 import numpy as np
 

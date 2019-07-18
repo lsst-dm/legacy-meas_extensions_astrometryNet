@@ -3,11 +3,7 @@ We used to have AstrometryNetDataConfig() use the pex_config
 mechanism, but we need nested lists, so we do this home-brew version
 instead.
 '''
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["AstrometryNetDataConfig"]
-
-from builtins import object
 
 
 def _checkMagMap(magmap):
@@ -58,7 +54,7 @@ def _checkMultiIndexList(multiIndexList):
                 raise RuntimeError('multiIndexList config items must be non-empty strings')
 
 
-class AstrometryNetDataConfig(object):
+class AstrometryNetDataConfig:
     '''
     Astrometry.net data config object.  This is a plain-python config
     structure similar to pexConfig.

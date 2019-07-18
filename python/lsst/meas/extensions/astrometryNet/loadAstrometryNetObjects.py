@@ -1,8 +1,4 @@
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["LoadAstrometryNetObjectsTask", "LoadAstrometryNetObjectsConfig"]
-
-from builtins import object
 
 import lsst.pipe.base as pipeBase
 from lsst.meas.algorithms import LoadReferenceObjectsTask, getRefFluxField
@@ -202,7 +198,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         return solver
 
 
-class LoadMultiIndexes(object):
+class LoadMultiIndexes:
     """Context manager for loading and unloading astrometry.net multi-index files
     """
 

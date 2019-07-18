@@ -20,15 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["InitialAstrometry", "ANetBasicAstrometryConfig", "ANetBasicAstrometryTask"]
 
-from builtins import zip
-from builtins import next
-from builtins import input
-from builtins import range
-from builtins import object
 import math
 import sys
 
@@ -49,7 +42,7 @@ import lsst.meas.astrom.sip as astromSip
 from . import cleanBadPoints
 
 
-class InitialAstrometry(object):
+class InitialAstrometry:
     """
     Object returned by Astrometry.determineWcs
 
