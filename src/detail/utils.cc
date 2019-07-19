@@ -25,12 +25,12 @@ extern "C" {
 #include "lsst/afw/image/Calib.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
-#include "lsst/afw/geom/Angle.h"
-#include "lsst/afw/geom/Point.h"
+#include "lsst/geom/Angle.h"
+#include "lsst/geom/Point.h"
 #pragma clang diagnostic pop
 
 namespace afwTable = lsst::afw::table;
-namespace afwGeom  = lsst::afw::geom;
+namespace geom = lsst::geom;
 
 namespace lsst {
 namespace meas {
@@ -56,11 +56,11 @@ read_column(
     return col;
 }
 
-    
+
 afwTable::SimpleCatalog
 getCatalogImpl(std::vector<index_t*> inds,
-    lsst::afw::geom::SpherePoint const &ctrCoord,
-    lsst::afw::geom::Angle const &radius,
+    lsst::geom::SpherePoint const &ctrCoord,
+    lsst::geom::Angle const &radius,
     char const* idCol,
     std::vector<MagColInfo> const& magColInfoList,
     char const* isStarCol,
@@ -87,7 +87,7 @@ getCatalogImpl(std::vector<index_t*> inds,
         }
         //printf("mag col \"%s\", \"%s\", \"%s\"\n", mc->filterName.c_str(), mc->magCol.c_str(), mc->magErrCol.c_str());
     }
-    
+
     double raDeg = ctrCoord.getLongitude().asDegrees();
     double decDeg = ctrCoord.getLatitude().asDegrees();
     double xyz[3];
@@ -210,7 +210,7 @@ getCatalogImpl(std::vector<index_t*> inds,
                 } else {
                     int nkeep = 0;
                     for (int i=0; i<nstars; i++) {
-                        //std::pair<std::set<std::int64_t>::iterator, bool> 
+                        //std::pair<std::set<std::int64_t>::iterator, bool>
                         if (uids.insert(id[i]).second) {
                             // inserted; keep this one.
                             if (nkeep != i) {
@@ -276,12 +276,12 @@ getCatalogImpl(std::vector<index_t*> inds,
         for (int i=0; i<nstars; i++) {
             PTR(afwTable::SimpleRecord) src = cat.addNew();
 
-            // Note that all coords in afwTable catalogs are ICRS; hopefully that's what the 
+            // Note that all coords in afwTable catalogs are ICRS; hopefully that's what the
             // reference catalogs are (and that's what the code assumed before JFB modified it).
             src->setCoord(
-                lsst::afw::geom::SpherePoint(
-                    radecs[i * 2 + 0] * afwGeom::degrees,
-                    radecs[i * 2 + 1] * afwGeom::degrees
+                lsst::geom::SpherePoint(
+                    radecs[i * 2 + 0] * geom::degrees,
+                    radecs[i * 2 + 1] * geom::degrees
                 )
             );
 

@@ -8,9 +8,8 @@ The new files are FITS binary tables that can be loaded into
 afw.table.SourceCatalog objects, and contain roughly equivalent fields that
 mimic those produced by common measurement algorithms in meas/alg.
 """
-from __future__ import print_function
-
 import lsst.afw.table
+import lsst.geom
 
 oldFlags = {
     "EDGE": 0x000001,
@@ -50,7 +49,7 @@ flagMapping = {
 
 def main(inputName, outputName):
     schema = lsst.afw.table.SourceTable.makeMinimalSchema()
-    centroidKey = schema.addField("centroid", type=lsst.afw.geom.Point2D)
+    centroidKey = schema.addField("centroid", type=lsst.geom.Point2D)
     schema.addField("centroid.flags", type="Flag")
     schema.addField("centroid.err", type="CovPointF")
     psfFluxKey = schema.addField("flux.psf", type=float)
@@ -74,8 +73,8 @@ def main(inputName, outputName):
                 print("Line %d: %s: %s" % (lineno, e, line), end=' ')
             record = outputCat.addNew()
             record.setId(int(id))
-            record.setRa(float(ra) * lsst.afw.geom.degrees)
-            record.setDec(float(dec) * lsst.afw.geom.degrees)
+            record.setRa(float(ra) * lsst.geom.degrees)
+            record.setDec(float(dec) * lsst.geom.degrees)
             record.set(centroidKey.getX(), float(x))
             record.set(centroidKey.getY(), float(y))
             record.set(psfFluxKey, float(cts))

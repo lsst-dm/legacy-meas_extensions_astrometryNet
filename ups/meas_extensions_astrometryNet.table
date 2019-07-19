@@ -6,11 +6,11 @@ setupRequired(pex_config)
 setupRequired(pipe_base)
 setupRequired(utils)
 setupRequired(astropy)
+setupRequired(geom)
 
 setupRequired(wcslib >= 4.4.4)
 setupRequired(astrometry_net)
 setupRequired(numpy)
-setupRequired(python_future)
 
 setupOptional(matplotlib)
 

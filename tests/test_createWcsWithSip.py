@@ -20,13 +20,12 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from __future__ import absolute_import, division, print_function
 import os
 import unittest
 
 from lsst.afw.table import SimpleCatalog, SourceCatalog
 import lsst.utils.tests
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 from lsst.log import Log
 from lsst.meas.extensions.astrometryNet import ANetBasicAstrometryTask, cleanBadPoints
 import lsst.meas.astrom.sip as sip
@@ -69,7 +68,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             x += a2 * (dx**2)
             src.set(xKey, x + x0)
             src.set(yKey, src.get(yKey) - 500 + y0)
-        bbox = afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Extent2I(1000, 1000))
+        bbox = geom.Box2I(geom.Point2I(x0, y0), geom.Extent2I(1000, 1000))
         res = self.astrom.determineWcs2(cat, bbox=bbox)
         self.assertIsNotNone(res.sipWcs, "Failed to fit SIP terms")
         print('Got result', res)
@@ -100,7 +99,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
     def singleTestInstance(self, filename, distortFunc):
         cat = self.loadCatalogue(self.filename)
         img = distort.distortList(cat, distortFunc)
-        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
+        bbox = geom.Box2I(geom.Point2I(0, 0), geom.Extent2I(1000, 1000))
         res = self.astrom.determineWcs2(img, bbox=bbox)
         imgWcs = res.getWcs()
 
@@ -136,7 +135,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             src.set(xKey, src.get(xKey) - 500)
             src.set(yKey, src.get(yKey) - 500)
 
-        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1000, 1000))
+        bbox = geom.Box2I(geom.Point2I(0, 0), geom.Extent2I(1000, 1000))
         res = self.astrom.determineWcs2(cat, bbox=bbox)
         catWcs = res.getWcs()
 
@@ -145,7 +144,7 @@ class CreateWcsWithSipCase(unittest.TestCase):
             src.updateCoord(catWcs)
         return cat
 
-    def matchSrcAndCatalogue(self, cat, img, imgWcs, dist=1.*afwGeom.arcseconds, cleanParam=3):
+    def matchSrcAndCatalogue(self, cat, img, imgWcs, dist=1.*geom.arcseconds, cleanParam=3):
         """Given an input catalogue, match a list of objects in an image, given
         their x,y position and a wcs solution.
 

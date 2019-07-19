@@ -20,15 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["InitialAstrometry", "ANetBasicAstrometryConfig", "ANetBasicAstrometryTask"]
 
-from builtins import zip
-from builtins import next
-from builtins import input
-from builtins import range
-from builtins import object
 import math
 import sys
 
@@ -38,10 +31,10 @@ import lsst.daf.base as dafBase
 from lsst.pex.config import Field, RangeField, ListField
 import lsst.pex.exceptions as pexExceptions
 import lsst.pipe.base as pipeBase
-import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 import lsst.afw.math as afwMath
 import lsst.afw.table as afwTable
+import lsst.geom as geom
 import lsst.meas.algorithms.utils as maUtils
 from .loadAstrometryNetObjects import LoadAstrometryNetObjectsTask, LoadMultiIndexes
 from lsst.meas.astrom import displayAstrometry, makeMatchStatisticsInRadians
@@ -49,7 +42,7 @@ import lsst.meas.astrom.sip as astromSip
 from . import cleanBadPoints
 
 
-class InitialAstrometry(object):
+class InitialAstrometry:
     """
     Object returned by Astrometry.determineWcs
 
@@ -300,7 +293,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         """Get image parameters
 
         @param[in] exposure  exposure (an afwImage.Exposure) or None
-        @param[in] bbox  bounding box (an afwGeom.Box2I) or None; if None then bbox must be specified
+        @param[in] bbox  bounding box (an geom.Box2I) or None; if None then bbox must be specified
         @param[in] wcs  WCS (an afwImage.Wcs) or None; if None then exposure must be specified
         @param[in] filterName  filter name, a string, or None; if None exposure must be specified
         @param[in] wcsRequired  if True then either wcs must be specified or exposure must contain a wcs;
@@ -435,7 +428,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
            controls whether we do that or force Astrometry.net to
            search both parities.  Default from config.useWcsParity.
 
-        'pixelScale': afwGeom.Angle, estimate of the angle-per-pixel
+        'pixelScale': geom.Angle, estimate of the angle-per-pixel
            (ie, arcseconds per pixel).  Defaults to a value derived
            from the exposure's WCS.  If enabled, this value, plus or
            minus config.pixelScaleUncertainty, will be used to limit
@@ -456,7 +449,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
 
         margs = kwargs.copy()
         if 'searchRadius' not in margs:
-            margs.update(searchRadius=self.config.raDecSearchRadius * afwGeom.degrees)
+            margs.update(searchRadius=self.config.raDecSearchRadius * geom.degrees)
         if 'usePixelScale' not in margs:
             margs.update(usePixelScale=self.config.useWcsPixelScale)
         if 'useRaDecCenter' not in margs:
@@ -483,8 +476,8 @@ class ANetBasicAstrometryTask(pipeBase.Task):
 
         filterName: string
         imageSize: (W,H) integer tuple/iterable
-        pixelScale: afwGeom::Angle per pixel.
-        radecCenter: afwCoord::Coord
+        pixelScale: lsst.geom.Angle per pixel.
+        radecCenter: lsst.afw.coord.Coord
         """
         wcs, qa = self.getBlindWcsSolution(sourceCat, **kwargs)
         kw = {}
@@ -523,7 +516,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             wcsRequired=False,
         )
 
-        bboxD = afwGeom.Box2D(bbox)
+        bboxD = geom.Box2D(bbox)
         xc, yc = bboxD.getCenter()
         parity = None
 
@@ -557,7 +550,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         if doTrim:
             n = len(sourceCat)
             if exposure is not None:
-                exposureBBoxD = afwGeom.Box2D(exposure.getMaskedImage().getBBox())
+                exposureBBoxD = geom.Box2D(exposure.getMaskedImage().getBBox())
             else:
                 exposureBBoxD = bboxD
             sourceCat = self._trimBadPoints(sourceCat, exposureBBoxD)
@@ -622,9 +615,9 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             # Linearize the original WCS around the image center to create a
             # TAN WCS.
             # Reference pixel in LSST coords
-            crpix = afwGeom.Box2D(bbox).getCenter()
+            crpix = geom.Box2D(bbox).getCenter()
             crval = wcs.pixelToSky(crpix)
-            crval = crval.getPosition(afwGeom.degrees)
+            crval = crval.getPosition(geom.degrees)
             # Linearize *AT* crval to get effective CD at crval.
             # (we use the default skyUnit of degrees as per WCS standard)
             aff = wcs.linearizePixelToSky(crval)
@@ -809,8 +802,8 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         """
         distStatsInRadians = makeMatchStatisticsInRadians(wcs, matchList,
                                                           afwMath.MEANCLIP | afwMath.STDEVCLIP)
-        distMean = distStatsInRadians.getValue(afwMath.MEANCLIP)*afwGeom.radians
-        distStdDev = distStatsInRadians.getValue(afwMath.STDEVCLIP)*afwGeom.radians
+        distMean = distStatsInRadians.getValue(afwMath.MEANCLIP)*geom.radians
+        distStdDev = distStatsInRadians.getValue(afwMath.STDEVCLIP)*geom.radians
         return pipeBase.Struct(
             distMean=distMean,
             distStdDev=distStdDev,
@@ -818,7 +811,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         )
 
     def _getMatchList(self, sourceCat, refCat, wcs):
-        dist = self.config.catalogMatchDist * afwGeom.arcseconds
+        dist = self.config.catalogMatchDist * geom.arcseconds
         clean = self.config.cleaningParameter
         matcher = astromSip.MatchSrcToCatalogue(refCat, sourceCat, wcs, dist)
         matches = matcher.getMatches()
@@ -875,7 +868,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
         x0, y0 = bbox.getMin()
 
         # select sources with valid x, y, flux
-        xybb = afwGeom.Box2D()
+        xybb = geom.Box2D()
         goodsources = afwTable.SourceCatalog(sourceCat.table)
         badkeys = [goodsources.getSchema().find(name).key for name in self.config.badFlags]
 
@@ -883,7 +876,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             if np.isfinite(s.getX()) and np.isfinite(s.getY()) and np.isfinite(s.getPsfInstFlux()) \
                     and self._isGoodSource(s, badkeys):
                 goodsources.append(s)
-                xybb.include(afwGeom.Point2D(s.getX() - x0, s.getY() - y0))
+                xybb.include(geom.Point2D(s.getX() - x0, s.getY() - y0))
         self.log.info("Number of selected sources for astrometry : %d" % (len(goodsources)))
         if len(goodsources) < len(sourceCat):
             self.log.debug('Keeping %i of %i sources with finite X,Y positions and PSF flux',
@@ -958,7 +951,7 @@ class ANetBasicAstrometryTask(pipeBase.Task):
             wcs = solver.getWcs()
 
             if x0 != 0 or y0 != 0:
-                wcs = wcs.copyAtShiftedPixelOrigin(afwGeom.Extent2D(x0, y0))
+                wcs = wcs.copyAtShiftedPixelOrigin(geom.Extent2D(x0, y0))
 
         else:
             self.log.warn('Did not get an astrometric solution from Astrometry.net')
@@ -1010,7 +1003,7 @@ def _createMetadata(bbox, wcs, filterName):
     """
     meta = dafBase.PropertyList()
 
-    bboxD = afwGeom.Box2D(bbox)
+    bboxD = geom.Box2D(bbox)
     cx, cy = bboxD.getCenter()
     radec = wcs.pixelToSky(cx, cy)
     meta.add('RA', radec.getRa().asDegrees(), 'field center in degrees')

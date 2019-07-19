@@ -1,8 +1,4 @@
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["LoadAstrometryNetObjectsTask", "LoadAstrometryNetObjectsConfig"]
-
-from builtins import object
 
 import lsst.pipe.base as pipeBase
 from lsst.meas.algorithms import LoadReferenceObjectsTask, getRefFluxField
@@ -86,7 +82,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         """!Load reference objects that overlap a circular sky region
 
         @param[in] ctrCoord  center of search region (an afwGeom.Coord)
-        @param[in] radius  radius of search region (an afwGeom.Angle)
+        @param[in] radius  radius of search region (an geom.Angle)
         @param[in] filterName  name of filter, or None for the default filter;
             used for flux values in case we have flux limits (which are not yet implemented)
         @param[in] epoch  Epoch for proper motion and parallax correction
@@ -188,7 +184,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         """!Get list of muti-index objects within range
 
         @param[in] ctrCoord  center of search region (an afwGeom.Coord)
-        @param[in] radius  radius of search region (an afwGeom.Angle)
+        @param[in] radius  radius of search region (an geom.Angle)
 
         @return list of multiindex objects
         """
@@ -202,7 +198,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         return solver
 
 
-class LoadMultiIndexes(object):
+class LoadMultiIndexes:
     """Context manager for loading and unloading astrometry.net multi-index files
     """
 

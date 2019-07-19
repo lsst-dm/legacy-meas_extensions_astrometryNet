@@ -1,10 +1,5 @@
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["getIndexPath", "getConfigFromEnvironment", "AstrometryNetCatalog", "generateCache"]
 
-from builtins import zip
-from builtins import range
-from builtins import object
 import os
 
 import numpy as np
@@ -60,7 +55,7 @@ def getConfigFromEnvironment():
     return andConfig
 
 
-class MultiIndexCache(object):
+class MultiIndexCache:
     """A wrapper for the multiindex_t, which only reads the data when it
     needs to
 
@@ -150,8 +145,8 @@ class MultiIndexCache(object):
     def isWithinRange(self, coord, distance):
         """!Is the index within range of the provided coordinates?
 
-        @param coord   ICRS coordinate to check (lsst.afw.geom.SpherPoint)
-        @param distance   Angular distance (lsst.afw.geom.Angle)
+        @param coord   ICRS coordinate to check (lsst.geom.SpherPoint)
+        @param distance   Angular distance (lsst.geom.Angle)
         """
         return (self._healpix == -1 or healpixDistance(self._healpix, self._nside, coord) <= distance)
 
@@ -167,7 +162,7 @@ class MultiIndexCache(object):
         return iter(self._mi)
 
 
-class AstrometryNetCatalog(object):
+class AstrometryNetCatalog:
     """An interface to an astrometry.net catalog
 
     Behaves like a list of MultiIndexCache (or multiindex_t).

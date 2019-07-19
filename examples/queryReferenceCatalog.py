@@ -1,10 +1,8 @@
-from __future__ import print_function
-from builtins import zip
 import sys
 
 import lsst.pex.policy as policy
 import lsst.meas.astrom as measAstrom
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 from lsst.log import Log
 
 
@@ -36,8 +34,8 @@ def main():
     indexid = ids[0]
 
     idName = 'id'
-    X = solver.getCatalogue(ra * afwGeom.degrees, dec * afwGeom.degrees,
-                            radius * afwGeom.degrees, '', idName, indexid)
+    X = solver.getCatalogue(ra * geom.degrees, dec * geom.degrees,
+                            radius * geom.degrees, '', idName, indexid)
     ref = X.refsources
     inds = X.inds
     print('Got', len(ref), 'reference catalog sources')

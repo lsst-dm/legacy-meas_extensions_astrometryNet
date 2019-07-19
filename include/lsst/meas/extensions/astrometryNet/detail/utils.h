@@ -6,7 +6,7 @@
 
 #include "lsst/afw/table/Source.h"
 #include "lsst/afw/coord.h"
-#include "lsst/afw/geom.h"
+#include "lsst/geom.h"
 
 namespace lsst {
 namespace meas {
@@ -77,8 +77,8 @@ Implementation for index_t::getCatalog method
 
 Returned schema:
 - id
-- coord: ICRS sky position (an lsst::afw::geom::SpherePoint)
-- centroid: centroid on some exposure, if relevant (an lsst::afw::geom::Point2D); returned value is not set
+- coord: ICRS sky position (an lsst::geom::SpherePoint)
+- centroid: centroid on some exposure, if relevant (an lsst::geom::Point2D); returned value is not set
 - hasCentroid: if true then centroid has been set; returned value is false
 - *filterName*_flux: flux in the specified filter (double)
 - *filterName*_fluxErr: flux uncertainty in the specified filter (double)
@@ -90,8 +90,8 @@ Returned schema:
 lsst::afw::table::SimpleCatalog
 getCatalogImpl(
     std::vector<index_t*> inds,
-    lsst::afw::geom::SpherePoint const &ctrCoord,
-    lsst::afw::geom::Angle const &radius,
+    lsst::geom::SpherePoint const &ctrCoord,
+    lsst::geom::Angle const &radius,
     const char* idCol,
     std::vector<MagColInfo> const& magColInfoList,
     const char* starGalCol,

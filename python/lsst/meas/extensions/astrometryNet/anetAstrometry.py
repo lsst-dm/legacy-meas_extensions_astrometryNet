@@ -19,21 +19,15 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from __future__ import absolute_import, division, print_function
-
 __all__ = ["ANetAstrometryConfig", "ANetAstrometryTask", "showAstrometry"]
-
-from builtins import input
-from builtins import zip
-from builtins import range
 
 import numpy as np
 
 import lsstDebug
 import lsst.pex.exceptions
-import lsst.afw.geom as afwGeom
 from lsst.afw.cameraGeom import PIXELS, TAN_PIXELS
 from lsst.afw.table import Point2DKey, CovarianceMatrix2fKey, updateSourceCoords
+import lsst.geom as geom
 import lsst.pex.config as pexConfig
 import lsst.pipe.base as pipeBase
 from lsst.meas.astrom import displayAstrometry
@@ -274,7 +268,7 @@ class ANetAstrometryTask(pipeBase.Task):
             s.set(self.centroidFlagKey, s.getCentroidFlag())
 
         # Get distorted image size so that astrometry_net does not clip.
-        bboxD = afwGeom.Box2D()
+        bboxD = geom.Box2D()
         for corner in detector.getCorners(TAN_PIXELS):
             bboxD.include(corner)
 
@@ -284,7 +278,7 @@ class ANetAstrometryTask(pipeBase.Task):
             displayAstrometry(sourceCat=sourceCat, distortedCentroidKey=self.centroidKey,
                               exposure=exposure, frame=frame, pause=pause)
 
-        return afwGeom.Box2I(bboxD)
+        return geom.Box2I(bboxD)
 
     @pipeBase.timeMethod
     def loadAndMatch(self, exposure, sourceCat, bbox=None):
