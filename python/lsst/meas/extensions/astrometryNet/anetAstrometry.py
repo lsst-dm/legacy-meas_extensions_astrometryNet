@@ -32,6 +32,7 @@ import lsst.pex.config as pexConfig
 import lsst.pipe.base as pipeBase
 from lsst.meas.astrom import displayAstrometry
 from lsst.meas.astrom.sip import makeCreateWcsWithSip
+from lsst.utils.timer import timeMethod
 from .anetBasicAstrometry import ANetBasicAstrometryTask
 
 
@@ -165,7 +166,7 @@ class ANetAstrometryTask(pipeBase.Task):
         # postpone making the solver subtask because it may not be needed and is expensive to create
         self.solver = None
 
-    @pipeBase.timeMethod
+    @timeMethod
     def run(self, exposure, sourceCat):
         """!Load reference objects, match sources and optionally fit a WCS
 
@@ -191,7 +192,7 @@ class ANetAstrometryTask(pipeBase.Task):
         else:
             return self.solve(exposure=exposure, sourceCat=sourceCat)
 
-    @pipeBase.timeMethod
+    @timeMethod
     def solve(self, exposure, sourceCat):
         r"""!Match with reference sources and calculate an astrometric solution
 
@@ -226,7 +227,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
         return results
 
-    @pipeBase.timeMethod
+    @timeMethod
     def distort(self, sourceCat, exposure):
         r"""!Calculate distorted source positions
 
@@ -280,7 +281,7 @@ class ANetAstrometryTask(pipeBase.Task):
 
         return geom.Box2I(bboxD)
 
-    @pipeBase.timeMethod
+    @timeMethod
     def loadAndMatch(self, exposure, sourceCat, bbox=None):
         """!Load reference objects overlapping an exposure and match to sources detected on that exposure
 
@@ -327,7 +328,7 @@ class ANetAstrometryTask(pipeBase.Task):
             matchMeta=matchMeta,
         )
 
-    @pipeBase.timeMethod
+    @timeMethod
     def _astrometry(self, sourceCat, exposure, bbox=None):
         r"""!Solve astrometry to produce WCS
 
@@ -372,7 +373,7 @@ class ANetAstrometryTask(pipeBase.Task):
             matchMeta=matchMeta,
         )
 
-    @pipeBase.timeMethod
+    @timeMethod
     def refitWcs(self, sourceCat, exposure, matches):
         """!A final Wcs solution after matching and removing distortion
 

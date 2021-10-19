@@ -3,6 +3,7 @@ __all__ = ["LoadAstrometryNetObjectsTask", "LoadAstrometryNetObjectsConfig"]
 import lsst.pipe.base as pipeBase
 from lsst.meas.algorithms import LoadReferenceObjectsTask, getRefFluxField
 from lsst.meas.algorithms.loadReferenceObjects import convertToNanojansky
+from lsst.utils.timer import timeMethod
 from . import astrometry_net
 from .multiindex import AstrometryNetCatalog, getConfigFromEnvironment
 
@@ -77,7 +78,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
         self.haveIndexFiles = False  # defer reading index files until we know they are needed
         # because astrometry may not be used, in which case it may not be properly configured
 
-    @pipeBase.timeMethod
+    @timeMethod
     def loadSkyCircle(self, ctrCoord, radius, filterName=None, epoch=None, centroids=True):
         """!Load reference objects that overlap a circular sky region
 
@@ -165,7 +166,7 @@ class LoadAstrometryNetObjectsTask(LoadReferenceObjectsTask):
             fluxField=fluxField,
         )
 
-    @pipeBase.timeMethod
+    @timeMethod
     def _readIndexFiles(self):
         """!Read all astrometry.net index files, if not already read
         """
